@@ -94,6 +94,14 @@ fun KeyboardBehaviorScreen(
     }
 
     DisposableEffect(lifecycleOwner) {
+        // On a cold start, the Activity can already reach RESUMED before this
+        // observer is attached, so the very first ON_RESUME event is missed
+        // and the initial `remember` value above (read at first composition)
+        // would otherwise never get corrected. Re-check once immediately on
+        // attach, in addition to every later ON_RESUME.
+        isAccessibilityAuthorized = api.isPassiveCaptureAuthorized()
+        needsOwnerConfirmation = api.needsOwnerConfirmationForCurrentSession()
+
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) {
                 isAccessibilityAuthorized = api.isPassiveCaptureAuthorized()
