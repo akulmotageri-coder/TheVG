@@ -23,10 +23,12 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,6 +46,7 @@ import com.example.vernacularguardian.keyboardprocessing.BehavioralDailySummary
 import com.example.vernacularguardian.keyboardprocessing.KeyboardProcessingApi
 import com.example.vernacularguardian.keyboardprocessing.KeyboardProcessingModule
 import com.example.vga.ui.DotGridBackground
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.Locale
 import kotlin.math.roundToInt
@@ -94,12 +97,15 @@ fun KeyboardBehaviorScreen(
         mutableStateOf(api.isPassiveCaptureAuthorized())
     }
 
-    var needsOwnerConfirmation by remember {
-        mutableStateOf(api.needsOwnerConfirmationForCurrentSession())
+    // Session-remembered only: KeyboardProcessingApi has no "is capture
+    // currently scheduled" query, so this reflects the last action taken in
+    // this screen, not a live WorkManager read.
+    var isCaptureEnabled by rememberSaveable {
+        mutableStateOf(false)
     }
 
     var passiveCaptureStatus by remember {
-        mutableStateOf("Not changed this session")
+        mutableStateOf("Disabled")
     }
 
     DisposableEffect(lifecycleOwner) {
@@ -109,16 +115,27 @@ fun KeyboardBehaviorScreen(
         // would otherwise never get corrected. Re-check once immediately on
         // attach, in addition to every later ON_RESUME.
         isAccessibilityAuthorized = api.isPassiveCaptureAuthorized()
-        needsOwnerConfirmation = api.needsOwnerConfirmationForCurrentSession()
 
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) {
                 isAccessibilityAuthorized = api.isPassiveCaptureAuthorized()
-                needsOwnerConfirmation = api.needsOwnerConfirmationForCurrentSession()
             }
         }
         lifecycleOwner.lifecycle.addObserver(observer)
         onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+    }
+
+    // While enabled, keep "Today's summary" feeling live by re-running the
+    // existing forceAggregateNow() rollup on a short interval instead of
+    // waiting for the 24h scheduled job. Cancels automatically the moment
+    // isCaptureEnabled flips false (LaunchedEffect restarts on key change)
+    // or this screen leaves composition - no new API surface, just repeated
+    // calls to the same existing suspend function Enable already triggers once.
+    LaunchedEffect(isCaptureEnabled) {
+        while (isCaptureEnabled) {
+            api.forceAggregateNow()
+            delay(4000)
+        }
     }
 
     Box(
@@ -151,8 +168,7 @@ fun KeyboardBehaviorScreen(
 
             StatusCard(
                 isAccessibilityAuthorized = isAccessibilityAuthorized,
-                passiveCaptureStatus = passiveCaptureStatus,
-                needsOwnerConfirmation = needsOwnerConfirmation
+                passiveCaptureStatus = passiveCaptureStatus
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -161,71 +177,37 @@ fun KeyboardBehaviorScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            SectionLabel(text = "PASSIVE CAPTURE")
+            SectionLabel(text = "KEYBOARD PROCESSING")
 
             Spacer(modifier = Modifier.height(10.dp))
 
             ActionRow(
-                icon = "▶",
-                label = "Start passive capture",
-                background = Mint,
-                textColor = MintText,
+                icon = if (isCaptureEnabled) "●" else "○",
+                label = if (isCaptureEnabled) "Disable Keyboard Processing" else "Enable Keyboard Processing",
+                background = if (isCaptureEnabled) Mint else Rose,
+                textColor = if (isCaptureEnabled) MintText else Berry,
                 onClick = {
-                    api.startPassiveCapture()
-                    passiveCaptureStatus = "Scheduled"
-                }
-            )
-
-            Spacer(modifier = Modifier.height(10.dp))
-
-            ActionRow(
-                icon = "■",
-                label = "Stop passive capture",
-                background = Rose,
-                textColor = Berry,
-                onClick = {
-                    api.stopPassiveCapture()
-                    passiveCaptureStatus = "Stopped"
-                }
-            )
-
-            Spacer(modifier = Modifier.height(10.dp))
-
-            ActionRow(
-                icon = "↻",
-                label = "Force aggregate now",
-                background = Blue,
-                textColor = BlueText,
-                onClick = { coroutineScope.launch { api.forceAggregateNow() } }
-            )
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            SectionLabel(text = "OWNER CONFIRMATION")
-
-            Spacer(modifier = Modifier.height(10.dp))
-
-            ActionRow(
-                icon = "✓",
-                label = "Confirm owner (Yes)",
-                background = Mint,
-                textColor = MintText,
-                onClick = {
-                    api.confirmOwnerForCurrentSession()
-                    needsOwnerConfirmation = api.needsOwnerConfirmationForCurrentSession()
-                }
-            )
-
-            Spacer(modifier = Modifier.height(10.dp))
-
-            ActionRow(
-                icon = "✕",
-                label = "Revoke owner (Not me)",
-                background = Rose,
-                textColor = Berry,
-                onClick = {
-                    api.revokeOwnerForCurrentSession()
-                    needsOwnerConfirmation = api.needsOwnerConfirmationForCurrentSession()
+                    if (isCaptureEnabled) {
+                        // Symmetric with Enable below: also revoke owner
+                        // confirmation, so a stray accessibility event
+                        // arriving after Disable still can't be tracked
+                        // without the user enabling again through this screen.
+                        api.stopPassiveCapture()
+                        api.revokeOwnerForCurrentSession()
+                        isCaptureEnabled = false
+                        passiveCaptureStatus = "Disabled"
+                    } else {
+                        // Enable is the single gesture for this screen: it
+                        // schedules capture, confirms ownership (previously a
+                        // separate "Confirm owner (Yes)" button), and rolls up
+                        // today's data immediately - all existing API calls,
+                        // just combined behind one action.
+                        api.startPassiveCapture()
+                        api.confirmOwnerForCurrentSession()
+                        coroutineScope.launch { api.forceAggregateNow() }
+                        isCaptureEnabled = true
+                        passiveCaptureStatus = "Enabled"
+                    }
                 }
             )
 
@@ -332,8 +314,7 @@ private fun SectionLabel(text: String) {
 @Composable
 private fun StatusCard(
     isAccessibilityAuthorized: Boolean,
-    passiveCaptureStatus: String,
-    needsOwnerConfirmation: Boolean
+    passiveCaptureStatus: String
 ) {
 
     Column(
@@ -383,13 +364,6 @@ private fun StatusCard(
         Spacer(modifier = Modifier.height(16.dp))
 
         StatusInfoRow(label = "Passive capture", value = passiveCaptureStatus)
-
-        Spacer(modifier = Modifier.height(6.dp))
-
-        StatusInfoRow(
-            label = "Owner confirmation needed",
-            value = if (needsOwnerConfirmation) "Yes" else "No"
-        )
     }
 }
 
