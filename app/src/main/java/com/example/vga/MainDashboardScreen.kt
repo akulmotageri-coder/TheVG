@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.vga.ui.DotGridBackground
 
 // ============================================================
 // COLORS (VGA's existing palette, matches AudioSeparationScreen)
@@ -51,139 +52,212 @@ fun MainDashboardScreen(
     onSelectKeyboardProcessing: () -> Unit
 ) {
 
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .background(WarmBackground)
-            .padding(20.dp)
     ) {
 
-        Spacer(
-            modifier = Modifier.height(28.dp)
-        )
+        DotGridBackground(modifier = Modifier.fillMaxSize())
 
-        Text(
-            text = "VGA",
-            color = Slate,
-            fontSize = 31.sp,
-            fontWeight = FontWeight.ExtraBold
-        )
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 22.dp)
+        ) {
 
-        Spacer(
-            modifier = Modifier.height(3.dp)
-        )
+            Spacer(
+                modifier = Modifier.height(32.dp)
+            )
 
-        Text(
-            text = "Choose what you'd like to analyze.",
-            color = Muted,
-            fontSize = 15.sp
-        )
+            Text(
+                text = "VGA",
+                color = Berry,
+                fontSize = 13.sp,
+                fontWeight = FontWeight.ExtraBold,
+                letterSpacing = 1.6.sp
+            )
 
-        Spacer(
-            modifier = Modifier.height(30.dp)
-        )
+            Spacer(
+                modifier = Modifier.height(10.dp)
+            )
 
-        DashboardCard(
-            icon = "🎙",
-            title = "Audio Processing",
-            description = "Voice separation & speech analysis",
-            iconBackground = Rose,
-            iconColor = Berry,
-            onClick = onSelectAudioProcessing
-        )
+            Text(
+                text = "What would you like\nto analyze?",
+                color = Slate,
+                fontSize = 30.sp,
+                fontWeight = FontWeight.ExtraBold,
+                lineHeight = 36.sp
+            )
 
-        Spacer(
-            modifier = Modifier.height(16.dp)
-        )
+            Spacer(
+                modifier = Modifier.height(8.dp)
+            )
 
-        DashboardCard(
-            icon = "⌨",
-            title = "Keyboard Processing",
-            description = "Keyboard behavior analysis",
-            iconBackground = Blue,
-            iconColor = BlueText,
-            onClick = onSelectKeyboardProcessing
-        )
+            Text(
+                text = "Choose a processing module to get started.",
+                color = Muted,
+                fontSize = 15.sp,
+                lineHeight = 21.sp
+            )
+
+            Spacer(
+                modifier = Modifier.height(34.dp)
+            )
+
+            ModuleCard(
+                icon = "🎙",
+                title = "Audio Processing",
+                description = "Voice separation & speech analysis",
+                tag = "Speech",
+                iconBackground = Rose,
+                iconColor = Berry,
+                tagBackground = Rose,
+                tagColor = Berry,
+                onClick = onSelectAudioProcessing
+            )
+
+            Spacer(
+                modifier = Modifier.height(16.dp)
+            )
+
+            ModuleCard(
+                icon = "⌨",
+                title = "Keyboard Processing",
+                description = "Typing behavior & cognitive signals",
+                tag = "Behavior",
+                iconBackground = Blue,
+                iconColor = BlueText,
+                tagBackground = Blue,
+                tagColor = BlueText,
+                onClick = onSelectKeyboardProcessing
+            )
+
+            Spacer(
+                modifier = Modifier.height(24.dp)
+            )
+        }
     }
 }
 
 @Composable
-private fun DashboardCard(
+private fun ModuleCard(
     icon: String,
     title: String,
     description: String,
+    tag: String,
     iconBackground: Color,
     iconColor: Color,
+    tagBackground: Color,
+    tagColor: Color,
     onClick: () -> Unit
 ) {
 
-    Box(
+    Column(
         modifier = Modifier
             .fillMaxWidth()
             .background(
                 White,
-                RoundedCornerShape(24.dp)
+                RoundedCornerShape(26.dp)
             )
             .border(
                 width = 1.dp,
                 color = Border,
-                shape = RoundedCornerShape(24.dp)
+                shape = RoundedCornerShape(26.dp)
             )
             .clickable { onClick() }
-            .padding(20.dp)
+            .padding(22.dp)
     ) {
 
+        Box(
+            modifier = Modifier
+                .size(56.dp)
+                .background(
+                    iconBackground,
+                    RoundedCornerShape(18.dp)
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+
+            Text(
+                text = icon,
+                fontSize = 26.sp
+            )
+        }
+
+        Spacer(
+            modifier = Modifier.height(18.dp)
+        )
+
         Row(
+            modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
 
+            Text(
+                text = title,
+                color = Slate,
+                fontSize = 19.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.weight(1f)
+            )
+
+            Spacer(
+                modifier = Modifier.width(8.dp)
+            )
+
             Box(
                 modifier = Modifier
-                    .size(50.dp)
+                    .size(30.dp)
                     .background(
-                        iconBackground,
+                        WarmBackground,
                         CircleShape
                     ),
                 contentAlignment = Alignment.Center
             ) {
 
                 Text(
-                    text = icon,
-                    fontSize = 22.sp
-                )
-            }
-
-            Spacer(
-                modifier = Modifier.width(14.dp)
-            )
-
-            Column(
-                modifier = Modifier.weight(1f)
-            ) {
-
-                Text(
-                    text = title,
-                    color = Slate,
-                    fontSize = 17.sp,
+                    text = "→",
+                    color = iconColor,
+                    fontSize = 15.sp,
                     fontWeight = FontWeight.Bold
                 )
-
-                Spacer(
-                    modifier = Modifier.height(3.dp)
-                )
-
-                Text(
-                    text = description,
-                    color = Muted,
-                    fontSize = 12.sp
-                )
             }
+        }
+
+        Spacer(
+            modifier = Modifier.height(6.dp)
+        )
+
+        Text(
+            text = description,
+            color = Muted,
+            fontSize = 14.sp,
+            lineHeight = 20.sp
+        )
+
+        Spacer(
+            modifier = Modifier.height(16.dp)
+        )
+
+        Box(
+            modifier = Modifier
+                .background(
+                    tagBackground,
+                    RoundedCornerShape(50.dp)
+                )
+                .padding(
+                    horizontal = 13.dp,
+                    vertical = 6.dp
+                )
+        ) {
 
             Text(
-                text = "→",
-                color = iconColor,
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold
+                text = tag,
+                color = tagColor,
+                fontSize = 11.sp,
+                fontWeight = FontWeight.ExtraBold,
+                letterSpacing = 0.4.sp
             )
         }
     }
