@@ -29,6 +29,10 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+        // :keyboard-processing requires this (java.time desugaring for its
+        // session-epoch-day calculation); AGP requires every consuming module
+        // to enable it too.
+        isCoreLibraryDesugaringEnabled = true
     }
     buildFeatures {
         compose = true
@@ -44,6 +48,8 @@ android {
 }
 
 dependencies {
+    implementation(project(":keyboard-processing"))
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation("com.github.k2-fsa:sherpa-onnx:v1.13.0")
     implementation(files("libs/opensmile-debug.aar"))
     implementation("androidx.compose.material:material-icons-extended")

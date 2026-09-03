@@ -28,3 +28,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "VGA"
 include(":app")
+include(":keyboard-processing")

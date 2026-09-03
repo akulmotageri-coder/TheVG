@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Required on API 33+ to post the Sprint 5 owner-confirmation prompt.
+         Declaring it here does not grant it; the owning app/onboarding must
+         still request it from the user (PRD Section 8). -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!-- REQUEST_IGNORE_BATTERY_OPTIMIZATIONS lives in src/debug/AndroidManifest.xml
+         only, not here: its sole consumer (Developer Diagnostics "Device Setup
+         Requirements") is BuildConfig.DEBUG-gated and unreachable in a release
+         build, so a release build should not ship this permission at all
+         (hardening-pass fix - it previously shipped in every build with no
+         reachable code path in release, a Play Console review/hygiene concern). -->
+
+    <application>
+        <service
+            android:name=".service.KeystrokeAccessibilityService"
+            android:exported="true"
+            android:label="@string/accessibility_service_label"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice.AccessibilityService"
+                android:resource="@xml/accessibility_service_config" />
+        </service>
+
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            android:exported="false">
+            <meta-data
+                android:name="com.example.vernacularguardian.keyboardprocessing.KeyboardProcessingInitializer"
+                android:value="androidx.startup" />
+        </provider>
+
+        <receiver
+            android:name=".owner.OwnerConfirmationActionReceiver"
+            android:exported="false" />
+    </application>
+
+</manifest>

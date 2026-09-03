@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="accessibility_service_description">Vernacular Guardian tracks typing rhythm metadata (timing and character counts only, never typed text) to support wellbeing insights.</string>
+    <string name="accessibility_service_label">Vernacular Guardian Keyboard Processing</string>
+    <string name="owner_confirmation_channel_name">Typing analysis confirmation</string>
+    <string name="owner_confirmation_title">Continue typing analysis?</string>
+    <string name="owner_confirmation_body">Confirm this is you typing.</string>
+    <string name="owner_confirmation_action_yes">Yes</string>
+    <string name="owner_confirmation_action_not_me">Not me</string>
+</resources>

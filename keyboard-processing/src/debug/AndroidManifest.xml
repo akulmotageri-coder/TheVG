@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Debug-build-only: lets the debug-only Developer Diagnostics
+         "Device Setup Requirements" section (DeveloperDiagnosticsScreen.kt,
+         BuildConfig.DEBUG-gated) launch the standard system dialog asking the
+         user to exempt this app from battery optimization - a real,
+         documented cause of the AccessibilityService being killed on some
+         OEMs (esp. MIUI). This only opens a system dialog the user controls;
+         it does not alter any setting itself. Scoped to the debug source set
+         only so a release build never ships a permission with zero reachable
+         code path (hardening-pass fix). -->
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+
+</manifest>
