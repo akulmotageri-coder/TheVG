@@ -26,7 +26,14 @@ object TranscriptStore {
 
         runCatching {
 
-            val existing = getAll(context).toMutableList()
+            // One record per source recording. Re-analysing the same file
+            // replaces its entry instead of adding a duplicate - otherwise
+            // repeated taps would stack identical transcripts and skew the
+            // personal baseline they are averaged into.
+            val existing = getAll(context)
+                .filterNot { it.sourceFileName == record.sourceFileName }
+                .toMutableList()
+
             existing.add(record)
 
             // Newest first, bounded so the file cannot grow without limit.

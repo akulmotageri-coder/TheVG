@@ -29,7 +29,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.vga.insight.InsightStore
+import com.example.vga.insight.TimelineBuilder
+import com.example.vga.insight.TimelineCategory
+import com.example.vga.insight.TimelineEvent
 import com.example.vga.insight.formatTimestamp
 import com.example.vga.ui.DotGridBackground
 
@@ -68,9 +70,9 @@ fun MainDashboardScreen(
 
     val context = LocalContext.current
 
-    // Real stored analyses - the dashboard timeline shows nothing until an
-    // analysis has actually completed.
-    val recentInsights = remember { InsightStore.getAll(context).take(3) }
+    // Real stored events only - the timeline shows nothing until actual
+    // recordings, transcripts, analyses or tests exist on the device.
+    val recentEvents = remember { TimelineBuilder.build(context, keyboard = null, limit = 4) }
 
     Box(
         modifier = Modifier
@@ -197,7 +199,7 @@ fun MainDashboardScreen(
             // event. Hidden entirely until real results exist.
             // ====================================================
 
-            if (recentInsights.isNotEmpty()) {
+            if (recentEvents.isNotEmpty()) {
 
                 Spacer(
                     modifier = Modifier.height(28.dp)
@@ -215,19 +217,12 @@ fun MainDashboardScreen(
                     modifier = Modifier.height(12.dp)
                 )
 
-                recentInsights.forEach { insight ->
+                recentEvents.forEachIndexed { index, event ->
 
-                    TimelineEvent(
-                        title = insight.headlinePattern,
-                        subtitle =
-                            "${formatTimestamp(insight.timestampMs)} · " +
-                                "${insight.transcriptWordCount} words · " +
-                                insight.confidence,
+                    TimelineRow(
+                        event = event,
+                        isLast = index == recentEvents.lastIndex,
                         onClick = onSelectLinguisticInsights
-                    )
-
-                    Spacer(
-                        modifier = Modifier.height(10.dp)
                     )
                 }
             }
@@ -240,69 +235,94 @@ fun MainDashboardScreen(
 }
 
 @Composable
-private fun TimelineEvent(
-    title: String,
-    subtitle: String,
+private fun TimelineRow(
+    event: TimelineEvent,
+    isLast: Boolean,
     onClick: () -> Unit
 ) {
+
+    val tint = when (event.category) {
+        TimelineCategory.SPEECH -> Rose
+        TimelineCategory.LANGUAGE -> Mint
+        TimelineCategory.PATTERN -> Butter
+        TimelineCategory.ACOUSTIC -> Blue
+        TimelineCategory.KEYBOARD -> Blue
+        TimelineCategory.COGNITIVE -> Butter
+    }
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(
-                White,
-                RoundedCornerShape(18.dp)
-            )
-            .border(
-                width = 1.dp,
-                color = Border,
-                shape = RoundedCornerShape(18.dp)
-            )
             .clickable { onClick() }
-            .padding(14.dp),
-        verticalAlignment = Alignment.CenterVertically
     ) {
 
-        Box(
-            modifier = Modifier
-                .size(9.dp)
-                .background(Berry, CircleShape)
-        )
+        // rail
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.width(28.dp)
+        ) {
+
+            Box(
+                modifier = Modifier
+                    .size(24.dp)
+                    .background(tint, CircleShape),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(text = event.category.icon, fontSize = 11.sp)
+            }
+
+            if (!isLast) {
+                Box(
+                    modifier = Modifier
+                        .width(2.dp)
+                        .height(34.dp)
+                        .background(Border)
+                )
+            }
+        }
 
         Spacer(
             modifier = Modifier.width(11.dp)
         )
 
         Column(
-            modifier = Modifier.weight(1f)
+            modifier = Modifier
+                .weight(1f)
+                .padding(bottom = if (isLast) 0.dp else 12.dp)
         ) {
 
-            Text(
-                text = title,
-                color = Slate,
-                fontSize = 13.sp,
-                fontWeight = FontWeight.Bold,
-                maxLines = 1
-            )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+
+                Text(
+                    text = event.title,
+                    color = Slate,
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 1,
+                    modifier = Modifier.weight(1f)
+                )
+
+                event.metric?.let {
+                    Text(
+                        text = it,
+                        color = SoftMuted,
+                        fontSize = 10.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
 
             Spacer(
                 modifier = Modifier.height(2.dp)
             )
 
             Text(
-                text = subtitle,
+                text = "${event.category.label} · ${formatTimestamp(event.timestampMs)}",
                 color = SoftMuted,
-                fontSize = 11.sp,
+                fontSize = 10.sp,
                 maxLines = 1
             )
         }
-
-        Text(
-            text = "→",
-            color = Berry,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Bold
-        )
     }
 }
 

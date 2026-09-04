@@ -15,6 +15,8 @@ import androidx.compose.runtime.setValue
 import androidx.core.content.ContextCompat
 import com.example.vga.audioseparation.AudioSeparationEntry
 import com.example.vga.cognitive.CognitiveTestsEntry
+import com.example.vga.insight.AiAssistantScreen
+import com.example.vga.insight.AiServerSettingsScreen
 import com.example.vga.insight.CognitiveInsightsScreen
 import com.example.vga.keyboard.KeyboardBehaviorScreen
 import com.example.vga.ui.theme.VGATheme
@@ -24,7 +26,9 @@ private enum class VgaTopLevelScreen {
     AUDIO_PROCESSING,
     KEYBOARD_PROCESSING,
     COGNITIVE_TESTS,
-    LINGUISTIC_INSIGHTS
+    LINGUISTIC_INSIGHTS,
+    AI_ASSISTANT,
+    AI_SERVER_SETTINGS
 }
 
 class MainActivity : ComponentActivity() {
@@ -105,6 +109,31 @@ class MainActivity : ComponentActivity() {
                         CognitiveInsightsScreen(
                             onBack = {
                                 currentScreen = VgaTopLevelScreen.DASHBOARD
+                            },
+                            onOpenAssistant = {
+                                currentScreen = VgaTopLevelScreen.AI_ASSISTANT
+                            },
+                            onOpenSettings = {
+                                currentScreen = VgaTopLevelScreen.AI_SERVER_SETTINGS
+                            }
+                        )
+                    }
+
+                    VgaTopLevelScreen.AI_ASSISTANT -> {
+                        AiAssistantScreen(
+                            onBack = {
+                                currentScreen = VgaTopLevelScreen.LINGUISTIC_INSIGHTS
+                            },
+                            onOpenSettings = {
+                                currentScreen = VgaTopLevelScreen.AI_SERVER_SETTINGS
+                            }
+                        )
+                    }
+
+                    VgaTopLevelScreen.AI_SERVER_SETTINGS -> {
+                        AiServerSettingsScreen(
+                            onBack = {
+                                currentScreen = VgaTopLevelScreen.LINGUISTIC_INSIGHTS
                             }
                         )
                     }

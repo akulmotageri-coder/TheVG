@@ -1,8 +1,6 @@
 
 package com.example.vga.audioseparation
 
-import com.example.vga.audioseparation.processing.AudioDecoder
-import com.example.vga.dementia.linguistic.IndicWhisperTranscriber
 import android.content.Context
 import android.media.MediaPlayer
 import androidx.compose.foundation.background
@@ -41,7 +39,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.vga.audioseparation.voice.VoiceInputScreen
-import com.example.vga.dementia.linguistic.TranscriptScreen
 import com.example.vga.dementia.acoustic.AcousticFeatureStore
 import com.example.vga.ui.FeatureListScreen
 import java.io.File
@@ -978,10 +975,6 @@ fun ExtractedVoiceScreen(
 ) {
 
     val context = LocalContext.current
-    val transcriber = remember {
-        IndicWhisperTranscriber(context)
-    }
-
     var files by remember {
         mutableStateOf(
             loadExtractedVoiceFiles(context)
@@ -998,14 +991,6 @@ fun ExtractedVoiceScreen(
 
     var showFeatureList by remember {
         mutableStateOf(false)
-    }
-
-    var showTranscript by remember {
-        mutableStateOf(false)
-    }
-
-    var selectedTranscript by remember {
-        mutableStateOf("")
     }
 
     var selectedFeatures by remember {
@@ -1038,17 +1023,6 @@ fun ExtractedVoiceScreen(
             features = selectedFeatures,
             onBack = {
                 showFeatureList = false
-            }
-        )
-
-        return
-    }
-    if (showTranscript) {
-
-        TranscriptScreen(
-            transcript = selectedTranscript,
-            onBack = {
-                showTranscript = false
             }
         )
 
@@ -1444,30 +1418,6 @@ fun ExtractedVoiceScreen(
                                 ?: emptyList()
 
                         showFeatureList = true
-                    },
-
-                    onTranscript = {
-
-                        try {
-
-                            val audioData =
-                                AudioDecoder.decodeToMonoFloat(file)
-
-                            selectedTranscript =
-                                transcriber.transcribe(
-                                    samples = audioData.samples,
-                                    sampleRate = audioData.sampleRate
-                                )
-
-                            showTranscript = true
-
-                        } catch (e: Exception) {
-
-                            selectedTranscript =
-                                "Transcription failed: ${e.message}"
-
-                            showTranscript = true
-                        }
                     }
                 )
 
@@ -1490,8 +1440,7 @@ private fun ExtractedVoiceCard(
     isPlaying: Boolean,
     onPlay: () -> Unit,
     onDelete: () -> Unit,
-    onFeatures: () -> Unit,
-    onTranscript: () -> Unit
+    onFeatures: () -> Unit
 ) {
 
     Column(
@@ -1687,37 +1636,6 @@ private fun ExtractedVoiceCard(
             Text(
                 text = "View Acoustic Features  →",
                 color = ButterText,
-                fontSize = 12.sp,
-                fontWeight = FontWeight.Bold
-            )
-        }
-
-// ⬇️ ADD THE NEW TRANSCRIPT BUTTON HERE
-
-        Spacer(
-            modifier = Modifier.height(10.dp)
-        )
-
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(
-                    Blue,
-                    RoundedCornerShape(50.dp)
-                )
-                .clickable {
-                    onTranscript()
-                }
-                .padding(
-                    vertical = 10.dp
-                ),
-
-            contentAlignment = Alignment.Center
-        ) {
-
-            Text(
-                text = "View Transcript  →",
-                color = BlueText,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold
             )

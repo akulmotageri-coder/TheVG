@@ -23,6 +23,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,8 +37,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.vga.audioseparation.processing.AudioDecoder
-import com.example.vga.dementia.linguistic.IndicWhisperTranscriber
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -46,10 +45,6 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-
-// ============================================================
-// COLORS (VGA palette)
-// ============================================================
 
 private val WarmBackground = Color(0xFFF9F8F6)
 private val Berry = Color(0xFF9E2A4B)
@@ -68,16 +63,18 @@ private val ButterText = Color(0xFF854D0E)
 
 
 /**
- * Linguistic insight module.
+ * Linguistic insight hub.
  *
- * Reads the real outputs of the existing pipeline (extracted-voice WAVs from
- * CallProcessingWorker), transcribes them with the existing IndicWhisper
- * transcriber, and sends the transcript to the local AI server for
- * pattern-based analysis. Nothing in the audio pipeline or its UI is modified.
+ * Everything shown here is computed locally and deterministically from stored
+ * data: transcript NLP, personal baseline, detected patterns, charts and the
+ * timeline. The AI assistant is reachable from here but only ever explains
+ * these values.
  */
 @Composable
 fun CognitiveInsightsScreen(
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    onOpenAssistant: () -> Unit,
+    onOpenSettings: () -> Unit
 ) {
 
     val context = LocalContext.current
@@ -85,29 +82,45 @@ fun CognitiveInsightsScreen(
 
     var status by remember { mutableStateOf<String?>(null) }
     var isBusy by remember { mutableStateOf(false) }
-    var serverState by remember { mutableStateOf("Not checked") }
-    var serverOk by remember { mutableStateOf<Boolean?>(null) }
+    var refreshKey by remember { mutableStateOf(0) }
+    var keyboard by remember { mutableStateOf<KeyboardSnapshot?>(null) }
+    var selectedMetric by remember { mutableStateOf(LanguageMetric.REPETITION_RATE) }
+    var selectedInsight by remember { mutableStateOf<LinguisticInsight?>(null) }
 
-    var insights by remember { mutableStateOf(InsightStore.getAll(context)) }
-    var recordings by remember { mutableStateOf(loadExtractedVoiceFiles(context)) }
-    var selected by remember { mutableStateOf<LinguisticInsight?>(null) }
-
-    val baseUrl = remember { AiServerConfig.baseUrl(context) }
-    val modelName = remember { AiServerConfig.model(context) }
-
-
-    // ========================================================
-    // INSIGHT DETAIL
-    // ========================================================
-
-    selected?.let { insight ->
-        InsightDetailScreen(
-            insight = insight,
-            onBack = { selected = null }
-        )
-        return
+    LaunchedEffect(refreshKey) {
+        keyboard = readKeyboardSnapshot(context)
     }
 
+    // ---- derived, deterministic view state ----
+
+    val analysable = remember(refreshKey) {
+        TranscriptStore.getAll(context)
+            .sortedBy { it.timestampMs }
+            .filterNot { TranscriptAnalytics.isTooShortToAnalyse(it.text) }
+            .map { it to TranscriptAnalytics.compute(
+                TranscriptAnalytics.stripPlaceholders(it.text)
+            ) }
+    }
+
+    val currentMetrics = analysable.lastOrNull()?.second
+    val priorMetrics = analysable.dropLast(1).map { it.second }
+    val baseline = remember(refreshKey) { TranscriptAnalytics.baselineOf(priorMetrics) }
+
+    val trendPoints = analysable.map {
+        TrendPoint(it.first.timestampMs, selectedMetric.valueOf(it.second))
+    }
+
+    val insights = remember(refreshKey) { InsightStore.getAll(context) }
+    val timeline = remember(refreshKey, keyboard) { TimelineBuilder.build(context, keyboard) }
+    val modalities = remember(refreshKey, keyboard) {
+        TimelineBuilder.modalityOverview(context, keyboard)
+    }
+    val recordings = remember(refreshKey) { loadCallRecordings(context) }
+
+    selectedInsight?.let { insight ->
+        InsightDetailScreen(insight = insight, onBack = { selectedInsight = null })
+        return
+    }
 
     Box(
         modifier = Modifier
@@ -121,170 +134,77 @@ fun CognitiveInsightsScreen(
                 .statusBarsPadding()
                 .navigationBarsPadding()
                 .verticalScroll(rememberScrollState())
-                .padding(
-                    start = 20.dp,
-                    end = 20.dp,
-                    top = 12.dp,
-                    bottom = 30.dp
-                )
+                .padding(start = 20.dp, end = 20.dp, top = 12.dp, bottom = 30.dp)
         ) {
 
-
-            // ================================================
-            // TOP NAV
-            // ================================================
+            // ---------- top bar ----------
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
 
-                Box(
-                    modifier = Modifier
-                        .size(44.dp)
-                        .clip(CircleShape)
-                        .background(White)
-                        .border(1.dp, Border, CircleShape)
-                        .clickable { onBack() },
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "‹",
-                        color = Slate,
-                        fontSize = 26.sp,
-                        fontWeight = FontWeight.Light
-                    )
-                }
+                CircleGlyph("‹", onBack)
 
                 Spacer(modifier = Modifier.width(12.dp))
 
-                Column {
+                Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = "Linguistic Insights",
+                        text = "Insights",
                         color = Slate,
                         fontSize = 22.sp,
                         fontWeight = FontWeight.Bold
                     )
-                    Spacer(modifier = Modifier.height(2.dp))
                     Text(
-                        text = "Transcript analysis · on-device AI",
+                        text = "Measured locally on this device",
                         color = SoftMuted,
                         fontSize = 11.sp,
                         fontWeight = FontWeight.Medium
                     )
                 }
+
+                CircleGlyph("⚙", onOpenSettings)
             }
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(18.dp))
 
+            // ---------- ask ai ----------
 
-            // ================================================
-            // SERVER STATUS
-            // ================================================
-
-            Column(
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(White, RoundedCornerShape(22.dp))
-                    .border(1.dp, Border, RoundedCornerShape(22.dp))
-                    .padding(18.dp)
+                    .background(Berry, RoundedCornerShape(20.dp))
+                    .clickable { onOpenAssistant() }
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-
-                Text(
-                    text = "Local AI server",
-                    color = Muted,
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Medium
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                val chipBg = when (serverOk) {
-                    true -> Mint
-                    false -> Butter
-                    null -> Color(0xFFF0F0F2)
-                }
-                val chipFg = when (serverOk) {
-                    true -> MintText
-                    false -> ButterText
-                    null -> Muted
-                }
-
-                Row(
-                    modifier = Modifier
-                        .background(chipBg, RoundedCornerShape(50.dp))
-                        .padding(horizontal = 13.dp, vertical = 7.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(8.dp)
-                            .background(chipFg, CircleShape)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
+                Text(text = "💬", fontSize = 20.sp)
+                Spacer(modifier = Modifier.width(12.dp))
+                Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = serverState,
-                        color = chipFg,
-                        fontSize = 13.sp,
+                        text = "Ask the AI Assistant",
+                        color = White,
+                        fontSize = 15.sp,
                         fontWeight = FontWeight.Bold
                     )
+                    Text(
+                        text = "Explains these measurements in plain language",
+                        color = White.copy(alpha = 0.8f),
+                        fontSize = 11.sp
+                    )
                 }
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                Text(text = baseUrl, color = Slate, fontSize = 12.sp)
-                Text(text = "Model: $modelName", color = Muted, fontSize = 12.sp)
-
-                Spacer(modifier = Modifier.height(14.dp))
-
-                ActionPill(
-                    label = "Test connection",
-                    background = Blue,
-                    textColor = BlueText,
-                    enabled = !isBusy,
-                    onClick = {
-                        scope.launch {
-                            isBusy = true
-                            serverState = "Checking…"
-                            serverOk = null
-
-                            val result = LocalAiClient(baseUrl).listModels()
-
-                            result.fold(
-                                onSuccess = { models ->
-                                    serverOk = true
-                                    serverState =
-                                        if (models.isEmpty()) "Reachable (no models listed)"
-                                        else "Reachable · ${models.size} model(s)"
-                                    status = "Server models: ${models.joinToString()}"
-                                },
-                                onFailure = { error ->
-                                    serverOk = false
-                                    serverState = "Unreachable"
-                                    status =
-                                        "Cannot reach $baseUrl — " +
-                                            "${error.javaClass.simpleName}: ${error.message}"
-                                }
-                            )
-
-                            isBusy = false
-                        }
-                    }
-                )
+                Text(text = "→", color = White, fontSize = 18.sp, fontWeight = FontWeight.Bold)
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(18.dp))
 
-
-            // ================================================
-            // STATUS MESSAGE
-            // ================================================
+            // ---------- status ----------
 
             status?.let { message ->
-                Column(
+                Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(Butter, RoundedCornerShape(18.dp))
+                        .background(Butter, RoundedCornerShape(16.dp))
                         .padding(14.dp)
                 ) {
                     Text(
@@ -297,20 +217,78 @@ fun CognitiveInsightsScreen(
                 Spacer(modifier = Modifier.height(16.dp))
             }
 
+            // ---------- multimodal ----------
 
-            // ================================================
-            // EXTRACTED RECORDINGS
-            // ================================================
+            SectionLabel("AVAILABLE SIGNALS")
+            Spacer(modifier = Modifier.height(10.dp))
+            MultimodalOverview(statuses = modalities)
 
-            SectionLabel("EXTRACTED VOICE RECORDINGS")
+            Spacer(modifier = Modifier.height(20.dp))
 
+            // ---------- trend ----------
+
+            SectionLabel("TREND OVER TIME")
+            Spacer(modifier = Modifier.height(10.dp))
+            MetricSelector(
+                selected = selectedMetric,
+                onSelect = { selectedMetric = it }
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+            MetricTrendChart(metric = selectedMetric, points = trendPoints)
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            // ---------- baseline ----------
+
+            SectionLabel("PERSONAL BASELINE")
+            Spacer(modifier = Modifier.height(10.dp))
+
+            if (currentMetrics == null) {
+                EmptyCard(
+                    title = "No analysable transcript yet",
+                    body = "Analyse a recording below to start measuring your " +
+                        "language patterns."
+                )
+            } else {
+                BaselineComparisonCard(
+                    current = currentMetrics,
+                    baseline = baseline,
+                    historyCount = priorMetrics.size
+                )
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            // ---------- timeline ----------
+
+            SectionLabel("TIMELINE")
+            Spacer(modifier = Modifier.height(10.dp))
+
+            if (timeline.isEmpty()) {
+                EmptyCard(
+                    title = "No events yet",
+                    body = "Processed calls, transcripts, detected patterns, " +
+                        "keyboard sessions and cognitive tests appear here."
+                )
+            } else {
+                TimelineList(
+                    events = timeline,
+                    onPatternClick = { selectedInsight = insights.firstOrNull() }
+                )
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            // ---------- recordings ----------
+
+            SectionLabel("ANALYSE A RECORDING")
             Spacer(modifier = Modifier.height(10.dp))
 
             if (recordings.isEmpty()) {
                 EmptyCard(
-                    title = "No processed recordings yet",
-                    body = "Share a call recording into VGA — once Audio " +
-                        "Processing extracts your voice, it appears here for analysis."
+                    title = "No call recordings",
+                    body = "Share a call recording into VGA and it appears here " +
+                        "for transcription and analysis."
                 )
             } else {
                 recordings.forEach { file ->
@@ -324,14 +302,8 @@ fun CognitiveInsightsScreen(
 
                                 val outcome = runCatching {
 
-                                    // Real transcription via the existing
-                                    // IndicWhisper pipeline - no stubbing.
                                     val text = withContext(Dispatchers.IO) {
-                                        val audio = AudioDecoder.decodeToMonoFloat(file)
-                                        IndicWhisperTranscriber(context).transcribe(
-                                            samples = audio.samples,
-                                            sampleRate = audio.sampleRate
-                                        )
+                                        TranscriptionSource.transcribe(context, file)
                                     }
 
                                     if (text.isBlank()) {
@@ -346,57 +318,28 @@ fun CognitiveInsightsScreen(
 
                                     TranscriptStore.save(context, record)
 
-                                    status =
-                                        "Transcribed ${record.wordCount} words. " +
-                                            "Sending to local AI server…"
+                                    status = "Analysing ${record.wordCount} words locally…"
 
                                     LinguisticAnalyzer.analyze(context, record).getOrThrow()
                                 }
 
                                 outcome.fold(
                                     onSuccess = { insight ->
-                                        insights = InsightStore.getAll(context)
                                         status =
-                                            "Analysis complete — ${insight.patterns.size} " +
-                                                "pattern(s) reported."
+                                            "Analysis complete — " +
+                                                "${insight.patterns.size} observation(s)."
+                                        refreshKey++
                                     },
                                     onFailure = { error ->
-                                        status =
-                                            "Analysis failed: " +
-                                                "${error.javaClass.simpleName}: ${error.message}"
+                                        status = error.message
+                                            ?: "${error.javaClass.simpleName} during analysis"
+                                        refreshKey++
                                     }
                                 )
 
                                 isBusy = false
                             }
                         }
-                    )
-                    Spacer(modifier = Modifier.height(10.dp))
-                }
-            }
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-
-            // ================================================
-            // TIMELINE
-            // ================================================
-
-            SectionLabel("INSIGHT TIMELINE")
-
-            Spacer(modifier = Modifier.height(10.dp))
-
-            if (insights.isEmpty()) {
-                EmptyCard(
-                    title = "No analyses yet",
-                    body = "Analyse a recording above and the result will appear " +
-                        "here and on the Main Dashboard."
-                )
-            } else {
-                insights.forEach { insight ->
-                    InsightRow(
-                        insight = insight,
-                        onClick = { selected = insight }
                     )
                     Spacer(modifier = Modifier.height(10.dp))
                 }
@@ -412,6 +355,125 @@ fun CognitiveInsightsScreen(
             )
         }
     }
+}
+
+
+// ============================================================
+// TIMELINE
+// ============================================================
+
+@Composable
+private fun TimelineList(
+    events: List<TimelineEvent>,
+    onPatternClick: () -> Unit
+) {
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(White, RoundedCornerShape(22.dp))
+            .border(1.dp, Border, RoundedCornerShape(22.dp))
+            .padding(18.dp)
+    ) {
+
+        events.forEachIndexed { index, event ->
+
+            val accent = accentFor(event.category)
+
+            Row(modifier = Modifier.fillMaxWidth()) {
+
+                // rail
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.width(30.dp)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(26.dp)
+                            .background(accent.second, CircleShape),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(text = event.category.icon, fontSize = 12.sp)
+                    }
+
+                    if (index != events.lastIndex) {
+                        Box(
+                            modifier = Modifier
+                                .width(2.dp)
+                                .height(46.dp)
+                                .background(Border)
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.width(12.dp))
+
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .then(
+                            if (event.category == TimelineCategory.PATTERN)
+                                Modifier.clickable { onPatternClick() }
+                            else Modifier
+                        )
+                        .padding(bottom = if (index == events.lastIndex) 0.dp else 18.dp)
+                ) {
+
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+
+                        Text(
+                            text = event.title,
+                            color = Slate,
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.weight(1f)
+                        )
+
+                        event.metric?.let {
+                            Box(
+                                modifier = Modifier
+                                    .background(accent.second, RoundedCornerShape(50.dp))
+                                    .padding(horizontal = 8.dp, vertical = 2.dp)
+                            ) {
+                                Text(
+                                    text = it,
+                                    color = accent.first,
+                                    fontSize = 10.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(3.dp))
+
+                    Text(
+                        text = event.description,
+                        color = Muted,
+                        fontSize = 11.sp,
+                        lineHeight = 15.sp
+                    )
+
+                    Spacer(modifier = Modifier.height(2.dp))
+
+                    Text(
+                        text = "${event.category.label} · ${formatTimestamp(event.timestampMs)}",
+                        color = SoftMuted,
+                        fontSize = 10.sp
+                    )
+                }
+            }
+        }
+    }
+}
+
+private fun accentFor(category: TimelineCategory): Pair<Color, Color> = when (category) {
+    TimelineCategory.SPEECH -> Berry to Rose
+    TimelineCategory.LANGUAGE -> MintText to Mint
+    TimelineCategory.PATTERN -> ButterText to Butter
+    TimelineCategory.ACOUSTIC -> BlueText to Blue
+    TimelineCategory.KEYBOARD -> BlueText to Blue
+    TimelineCategory.COGNITIVE -> ButterText to Butter
 }
 
 
@@ -444,20 +506,8 @@ private fun InsightDetailScreen(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Box(
-                    modifier = Modifier
-                        .size(44.dp)
-                        .clip(CircleShape)
-                        .background(White)
-                        .border(1.dp, Border, CircleShape)
-                        .clickable { onBack() },
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text("‹", color = Slate, fontSize = 26.sp, fontWeight = FontWeight.Light)
-                }
-
+                CircleGlyph("‹", onBack)
                 Spacer(modifier = Modifier.width(12.dp))
-
                 Column {
                     Text(
                         text = "Observed Patterns",
@@ -475,7 +525,6 @@ private fun InsightDetailScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            // Confidence + source
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -487,46 +536,35 @@ private fun InsightDetailScreen(
                 Spacer(modifier = Modifier.height(6.dp))
                 InfoLine("Transcript length", "${insight.transcriptWordCount} words")
                 Spacer(modifier = Modifier.height(6.dp))
-                InfoLine("Pattern strength", insight.confidence.replaceFirstChar { it.uppercase() })
+                InfoLine("Strength of change", insight.confidence)
                 Spacer(modifier = Modifier.height(6.dp))
-                InfoLine("Analysed by", insight.modelName)
-
-                if (insight.guardApplied) {
-                    Spacer(modifier = Modifier.height(10.dp))
-                    Text(
-                        text = "Note: diagnostic phrasing from the model was " +
-                            "automatically rewritten to non-diagnostic wording.",
-                        color = ButterText,
-                        fontSize = 11.sp,
-                        lineHeight = 16.sp
-                    )
-                }
+                InfoLine("Computed by", insight.modelName)
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            SectionLabel("DETECTED PATTERNS")
+            SectionLabel("OBSERVATIONS")
             Spacer(modifier = Modifier.height(10.dp))
 
             if (insight.patterns.isEmpty()) {
                 EmptyCard(
-                    title = "No specific pattern reported",
-                    body = "The model did not report a distinct linguistic pattern " +
-                        "for this transcript."
+                    title = "No notable change measured",
+                    body = "None of the measured language features moved enough " +
+                        "from your baseline to be reported."
                 )
             } else {
                 insight.patterns.forEach { pattern ->
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .background(Rose, RoundedCornerShape(18.dp))
+                            .background(Butter, RoundedCornerShape(18.dp))
                             .padding(15.dp)
                     ) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Text(
                                 text = pattern.label,
-                                color = Berry,
-                                fontSize = 14.sp,
+                                color = ButterText,
+                                fontSize = 13.sp,
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier.weight(1f)
                             )
@@ -537,7 +575,7 @@ private fun InsightDetailScreen(
                             ) {
                                 Text(
                                     text = pattern.strength,
-                                    color = Berry,
+                                    color = ButterText,
                                     fontSize = 10.sp,
                                     fontWeight = FontWeight.Bold
                                 )
@@ -559,10 +597,10 @@ private fun InsightDetailScreen(
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            SectionLabel("CHANGE FROM BASELINE")
+            SectionLabel("BASELINE")
             Spacer(modifier = Modifier.height(10.dp))
 
-            Column(
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(Blue, RoundedCornerShape(18.dp))
@@ -578,7 +616,7 @@ private fun InsightDetailScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            SectionLabel("SUPPORTING METRICS")
+            SectionLabel("MEASURED FEATURES")
             Spacer(modifier = Modifier.height(10.dp))
 
             Column(
@@ -598,7 +636,7 @@ private fun InsightDetailScreen(
                         Text(
                             text = metric.value,
                             color = Slate,
-                            fontSize = 13.sp,
+                            fontSize = 12.sp,
                             fontWeight = FontWeight.Bold
                         )
                     }
@@ -607,7 +645,7 @@ private fun InsightDetailScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            SectionLabel("EXPLANATION")
+            SectionLabel("SUMMARY")
             Spacer(modifier = Modifier.height(10.dp))
 
             Column(
@@ -653,6 +691,21 @@ private fun InfoLine(label: String, value: String) {
 }
 
 @Composable
+private fun CircleGlyph(glyph: String, onClick: () -> Unit) {
+    Box(
+        modifier = Modifier
+            .size(44.dp)
+            .clip(CircleShape)
+            .background(White)
+            .border(1.dp, Border, CircleShape)
+            .clickable { onClick() },
+        contentAlignment = Alignment.Center
+    ) {
+        Text(text = glyph, color = Slate, fontSize = 20.sp)
+    }
+}
+
+@Composable
 private fun EmptyCard(title: String, body: String) {
     Column(
         modifier = Modifier
@@ -664,34 +717,6 @@ private fun EmptyCard(title: String, body: String) {
         Text(text = title, color = Slate, fontSize = 14.sp, fontWeight = FontWeight.Bold)
         Spacer(modifier = Modifier.height(4.dp))
         Text(text = body, color = Muted, fontSize = 12.sp, lineHeight = 17.sp)
-    }
-}
-
-@Composable
-private fun ActionPill(
-    label: String,
-    background: Color,
-    textColor: Color,
-    enabled: Boolean,
-    onClick: () -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(
-                if (enabled) background else background.copy(alpha = 0.5f),
-                RoundedCornerShape(50.dp)
-            )
-            .clickable(enabled = enabled) { onClick() }
-            .padding(vertical = 13.dp),
-        horizontalArrangement = Arrangement.Center
-    ) {
-        Text(
-            text = label,
-            color = textColor,
-            fontSize = 13.sp,
-            fontWeight = FontWeight.Bold
-        )
     }
 }
 
@@ -722,52 +747,24 @@ private fun RecordingRow(
             fontSize = 11.sp
         )
         Spacer(modifier = Modifier.height(12.dp))
-        ActionPill(
-            label = "Transcribe & Analyse",
-            background = Rose,
-            textColor = Berry,
-            enabled = enabled,
-            onClick = onAnalyze
-        )
-    }
-}
-
-@Composable
-private fun InsightRow(
-    insight: LinguisticInsight,
-    onClick: () -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(White, RoundedCornerShape(20.dp))
-            .border(1.dp, Border, RoundedCornerShape(20.dp))
-            .clickable { onClick() }
-            .padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Box(
+        Row(
             modifier = Modifier
-                .size(10.dp)
-                .background(Berry, CircleShape)
-        )
-        Spacer(modifier = Modifier.width(12.dp))
-        Column(modifier = Modifier.weight(1f)) {
+                .fillMaxWidth()
+                .background(
+                    if (enabled) Rose else Rose.copy(alpha = 0.5f),
+                    RoundedCornerShape(50.dp)
+                )
+                .clickable(enabled = enabled) { onAnalyze() }
+                .padding(vertical = 13.dp),
+            horizontalArrangement = Arrangement.Center
+        ) {
             Text(
-                text = insight.headlinePattern,
-                color = Slate,
+                text = "Transcribe & Analyse",
+                color = Berry,
                 fontSize = 13.sp,
                 fontWeight = FontWeight.Bold
             )
-            Spacer(modifier = Modifier.height(3.dp))
-            Text(
-                text = "${formatTimestamp(insight.timestampMs)} · " +
-                    "${insight.patterns.size} pattern(s) · ${insight.confidence}",
-                color = SoftMuted,
-                fontSize = 11.sp
-            )
         }
-        Text(text = "→", color = Berry, fontSize = 18.sp, fontWeight = FontWeight.Bold)
     }
 }
 
@@ -779,8 +776,15 @@ private fun InsightRow(
 internal fun formatTimestamp(timestampMs: Long): String =
     SimpleDateFormat("d MMM, HH:mm", Locale.getDefault()).format(Date(timestampMs))
 
-private fun loadExtractedVoiceFiles(context: Context): List<File> {
-    val directory = File(context.filesDir, "extracted_voice")
+/**
+ * Transcription source: the ORIGINAL call recordings.
+ *
+ * The extracted-voice output is speaker-masked, which removes much of the
+ * speech and gives the recogniser very little to work with, so the unmasked
+ * recording produces a far more usable transcript.
+ */
+private fun loadCallRecordings(context: Context): List<File> {
+    val directory = File(context.filesDir, "call_recordings")
     if (!directory.exists()) return emptyList()
     return directory.listFiles()
         ?.filter { it.isFile && it.extension.equals("wav", ignoreCase = true) }

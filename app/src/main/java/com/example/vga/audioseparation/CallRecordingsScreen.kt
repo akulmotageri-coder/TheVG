@@ -28,8 +28,16 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.runtime.rememberCoroutineScope
 import com.example.vga.audioseparation.audio.AudioPlayer
 import com.example.vga.audioseparation.repository.CallRecordingRepository
+import com.example.vga.dementia.linguistic.TranscriptScreen
+import com.example.vga.insight.TranscriptRecord
+import com.example.vga.insight.TranscriptStore
+import com.example.vga.insight.TranscriptionSource
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 import androidx.compose.foundation.layout.Box
 // ============================================================
@@ -59,6 +67,12 @@ private val Berry =
 
 private val Rose =
     Color(0xFFFFE5EC)
+
+private val Blue =
+    Color(0xFFE3F2FD)
+
+private val BlueText =
+    Color(0xFF1E6091)
 
 
 // ============================================================
@@ -94,6 +108,45 @@ fun CallRecordingsScreen(
 
     var fileToDelete by remember {
         mutableStateOf<File?>(null)
+    }
+
+    val scope = rememberCoroutineScope()
+
+    var showTranscript by remember {
+        mutableStateOf(false)
+    }
+
+    var transcriptText by remember {
+        mutableStateOf("")
+    }
+
+    var transcribingFile by remember {
+        mutableStateOf<String?>(null)
+    }
+
+
+    // ========================================================
+    // TRANSCRIPT
+    //
+    // Transcribes the ORIGINAL call recording. The extracted
+    // voice is speaker-masked, which removes much of the speech
+    // and leaves the recogniser very little to work with, so the
+    // unmasked recording is the better transcription source.
+    //
+    // The result is saved to TranscriptStore, which is what the
+    // Linguistic Insights module analyses.
+    // ========================================================
+
+    if (showTranscript) {
+
+        TranscriptScreen(
+            transcript = transcriptText,
+            onBack = {
+                showTranscript = false
+            }
+        )
+
+        return
     }
 
 
@@ -422,6 +475,72 @@ fun CallRecordingsScreen(
 
                         fileToDelete =
                             recording.file
+                    },
+
+                    isTranscribing =
+                        transcribingFile ==
+                                recording.file.absolutePath,
+
+                    onTranscript = {
+
+                        if (transcribingFile == null) {
+
+                            transcribingFile =
+                                recording.file.absolutePath
+
+                            scope.launch {
+
+                                val outcome = runCatching {
+
+                                    withContext(Dispatchers.IO) {
+
+                                        // Resamples to the 16 kHz Whisper
+                                        // requires (call audio is often 8 kHz).
+                                        TranscriptionSource.transcribe(
+                                            context = context,
+                                            file = recording.file
+                                        )
+                                    }
+                                }
+
+                                outcome.fold(
+
+                                    onSuccess = { text ->
+
+                                        transcriptText =
+                                            text.ifBlank {
+                                                "No speech was recognised in this recording."
+                                            }
+
+                                        if (text.isNotBlank()) {
+
+                                            TranscriptStore.save(
+                                                context = context,
+                                                record = TranscriptRecord(
+                                                    timestampMs =
+                                                        System.currentTimeMillis(),
+                                                    sourceFileName =
+                                                        recording.file.name,
+                                                    text = text
+                                                )
+                                            )
+                                        }
+
+                                        showTranscript = true
+                                    },
+
+                                    onFailure = { error ->
+
+                                        transcriptText =
+                                            "Transcription failed: ${error.message}"
+
+                                        showTranscript = true
+                                    }
+                                )
+
+                                transcribingFile = null
+                            }
+                        }
                     }
                 )
 
@@ -444,7 +563,9 @@ private fun CallRecordingCard(
     file: File,
     isPlaying: Boolean,
     onPlay: () -> Unit,
-    onDelete: () -> Unit
+    onDelete: () -> Unit,
+    isTranscribing: Boolean = false,
+    onTranscript: () -> Unit = {}
 ) {
 
     Column(
@@ -579,6 +700,33 @@ private fun CallRecordingCard(
                 onClick = onDelete
             )
         }
+
+
+        Spacer(
+            modifier = Modifier.height(9.dp)
+        )
+
+
+        // ====================================================
+        // TRANSCRIPT
+        // ====================================================
+
+        BoxButton(
+            text =
+                if (isTranscribing) {
+                    "Transcribing…"
+                } else {
+                    "View Transcript  →"
+                },
+
+            textColor = BlueText,
+
+            background = Blue,
+
+            modifier = Modifier.fillMaxWidth(),
+
+            onClick = onTranscript
+        )
     }
 }
 
