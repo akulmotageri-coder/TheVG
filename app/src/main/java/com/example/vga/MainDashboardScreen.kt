@@ -21,12 +21,16 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.vga.insight.InsightStore
+import com.example.vga.insight.formatTimestamp
 import com.example.vga.ui.DotGridBackground
 
 // ============================================================
@@ -45,6 +49,8 @@ private val Blue = Color(0xFFE3F2FD)
 private val BlueText = Color(0xFF1E6091)
 private val Butter = Color(0xFFFFF3CD)
 private val ButterText = Color(0xFF854D0E)
+private val Mint = Color(0xFFE6F4EA)
+private val MintText = Color(0xFF137333)
 
 /**
  * VGA's central module-selection screen: the app's first/launch screen.
@@ -56,8 +62,15 @@ private val ButterText = Color(0xFF854D0E)
 fun MainDashboardScreen(
     onSelectAudioProcessing: () -> Unit,
     onSelectKeyboardProcessing: () -> Unit,
-    onSelectCognitiveTests: () -> Unit
+    onSelectCognitiveTests: () -> Unit,
+    onSelectLinguisticInsights: () -> Unit
 ) {
+
+    val context = LocalContext.current
+
+    // Real stored analyses - the dashboard timeline shows nothing until an
+    // analysis has actually completed.
+    val recentInsights = remember { InsightStore.getAll(context).take(3) }
 
     Box(
         modifier = Modifier
@@ -162,11 +175,137 @@ fun MainDashboardScreen(
             )
 
             Spacer(
+                modifier = Modifier.height(16.dp)
+            )
+
+            ModuleCard(
+                icon = "💬",
+                title = "Linguistic Insights",
+                description = "Transcript analysis with on-device AI",
+                tag = "Language",
+                iconBackground = Mint,
+                iconColor = MintText,
+                tagBackground = Mint,
+                tagColor = MintText,
+                onClick = onSelectLinguisticInsights
+            )
+
+            // ====================================================
+            // TIMELINE
+            //
+            // A completed transcript analysis appears here as an
+            // event. Hidden entirely until real results exist.
+            // ====================================================
+
+            if (recentInsights.isNotEmpty()) {
+
+                Spacer(
+                    modifier = Modifier.height(28.dp)
+                )
+
+                Text(
+                    text = "RECENT ACTIVITY",
+                    color = SoftMuted,
+                    fontSize = 10.sp,
+                    fontWeight = FontWeight.ExtraBold,
+                    letterSpacing = 1.3.sp
+                )
+
+                Spacer(
+                    modifier = Modifier.height(12.dp)
+                )
+
+                recentInsights.forEach { insight ->
+
+                    TimelineEvent(
+                        title = insight.headlinePattern,
+                        subtitle =
+                            "${formatTimestamp(insight.timestampMs)} · " +
+                                "${insight.transcriptWordCount} words · " +
+                                insight.confidence,
+                        onClick = onSelectLinguisticInsights
+                    )
+
+                    Spacer(
+                        modifier = Modifier.height(10.dp)
+                    )
+                }
+            }
+
+            Spacer(
                 modifier = Modifier.height(24.dp)
             )
         }
     }
 }
+
+@Composable
+private fun TimelineEvent(
+    title: String,
+    subtitle: String,
+    onClick: () -> Unit
+) {
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(
+                White,
+                RoundedCornerShape(18.dp)
+            )
+            .border(
+                width = 1.dp,
+                color = Border,
+                shape = RoundedCornerShape(18.dp)
+            )
+            .clickable { onClick() }
+            .padding(14.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+
+        Box(
+            modifier = Modifier
+                .size(9.dp)
+                .background(Berry, CircleShape)
+        )
+
+        Spacer(
+            modifier = Modifier.width(11.dp)
+        )
+
+        Column(
+            modifier = Modifier.weight(1f)
+        ) {
+
+            Text(
+                text = title,
+                color = Slate,
+                fontSize = 13.sp,
+                fontWeight = FontWeight.Bold,
+                maxLines = 1
+            )
+
+            Spacer(
+                modifier = Modifier.height(2.dp)
+            )
+
+            Text(
+                text = subtitle,
+                color = SoftMuted,
+                fontSize = 11.sp,
+                maxLines = 1
+            )
+        }
+
+        Text(
+            text = "→",
+            color = Berry,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold
+        )
+    }
+}
+
 
 @Composable
 private fun ModuleCard(

@@ -15,6 +15,7 @@ import androidx.compose.runtime.setValue
 import androidx.core.content.ContextCompat
 import com.example.vga.audioseparation.AudioSeparationEntry
 import com.example.vga.cognitive.CognitiveTestsEntry
+import com.example.vga.insight.CognitiveInsightsScreen
 import com.example.vga.keyboard.KeyboardBehaviorScreen
 import com.example.vga.ui.theme.VGATheme
 
@@ -22,7 +23,8 @@ private enum class VgaTopLevelScreen {
     DASHBOARD,
     AUDIO_PROCESSING,
     KEYBOARD_PROCESSING,
-    COGNITIVE_TESTS
+    COGNITIVE_TESTS,
+    LINGUISTIC_INSIGHTS
 }
 
 class MainActivity : ComponentActivity() {
@@ -68,6 +70,9 @@ class MainActivity : ComponentActivity() {
                             },
                             onSelectCognitiveTests = {
                                 currentScreen = VgaTopLevelScreen.COGNITIVE_TESTS
+                            },
+                            onSelectLinguisticInsights = {
+                                currentScreen = VgaTopLevelScreen.LINGUISTIC_INSIGHTS
                             }
                         )
                     }
@@ -90,6 +95,14 @@ class MainActivity : ComponentActivity() {
 
                     VgaTopLevelScreen.COGNITIVE_TESTS -> {
                         CognitiveTestsEntry(
+                            onBack = {
+                                currentScreen = VgaTopLevelScreen.DASHBOARD
+                            }
+                        )
+                    }
+
+                    VgaTopLevelScreen.LINGUISTIC_INSIGHTS -> {
+                        CognitiveInsightsScreen(
                             onBack = {
                                 currentScreen = VgaTopLevelScreen.DASHBOARD
                             }

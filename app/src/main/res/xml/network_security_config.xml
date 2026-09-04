@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    The local AI server runs on the device / local network over plain HTTP
+    (http://<device-ip>:8080). Android blocks cleartext by default at this
+    targetSdk, so cleartext is permitted here.
+
+    The server address is user-configurable (DHCP can change it), so a
+    base-config is used rather than pinning one IP that would stop working
+    after a lease change. Nothing is sent off the local network.
+-->
+<network-security-config>
+
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+
+</network-security-config>

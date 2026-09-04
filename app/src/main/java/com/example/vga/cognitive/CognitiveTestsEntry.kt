@@ -12,6 +12,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+
+import com.example.vga.insight.CognitiveResultStore
+import com.example.vga.insight.CognitiveSnapshot
 
 import com.example.vernacularguardian.model.AssessmentResult
 import com.example.vernacularguardian.model.DigitSpanResult
@@ -77,10 +81,44 @@ fun CognitiveTestsEntry(
     // ASSESSMENT RESULTS
     // ========================================================
 
+    val context = LocalContext.current
+
     var assessmentResult by remember {
 
         mutableStateOf(
             AssessmentResult()
+        )
+    }
+
+
+    /**
+     * Mirrors completed results into VGA's own store so the linguistic-insight
+     * fusion step can read them. The cognitive module keeps its results in
+     * memory only; this writes a copy without touching its internals.
+     */
+    fun persistResults(result: AssessmentResult) {
+
+        val stroop = result.stroop
+        val digitSpan = result.digitSpan
+        val trail = result.trailMaking
+
+        CognitiveResultStore.save(
+            context = context,
+            snapshot = CognitiveSnapshot(
+                stroopAccuracyPercent =
+                    stroop?.let {
+                        if (it.totalTrials > 0) {
+                            it.correct * 100.0 / it.totalTrials
+                        } else {
+                            null
+                        }
+                    },
+                stroopAvgResponseMs = stroop?.averageResponseTimeMs,
+                digitSpanForward = digitSpan?.forwardLongestSpan,
+                digitSpanBackward = digitSpan?.backwardLongestSpan,
+                trailMakingPartAMs = trail?.partATimeMs,
+                trailMakingPartBMs = trail?.partBTimeMs
+            )
         )
     }
 
@@ -188,6 +226,8 @@ fun CognitiveTestsEntry(
                             stroop = result
                         )
 
+                    persistResults(assessmentResult)
+
                     currentScreen =
                         CognitiveScreen.DASHBOARD
                 }
@@ -212,6 +252,8 @@ fun CognitiveTestsEntry(
                             digitSpan = result
                         )
 
+                    persistResults(assessmentResult)
+
                     currentScreen =
                         CognitiveScreen.DASHBOARD
                 }
@@ -235,6 +277,8 @@ fun CognitiveTestsEntry(
                         assessmentResult.copy(
                             trailMaking = result
                         )
+
+                    persistResults(assessmentResult)
 
                     currentScreen =
                         CognitiveScreen.DASHBOARD
