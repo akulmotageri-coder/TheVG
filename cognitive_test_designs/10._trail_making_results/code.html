@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Trail Making Results</title>
+<!-- Tailwind CSS v3 with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            app: {
+              bg: '#F8F9FC',
+              card: '#FFFFFF',
+              primary: '#9E2A47',
+              primaryHover: '#86223B',
+              textDark: '#1E232A',
+              textMuted: '#6B7280',
+              accentYellow: '#FEF08A',
+              accentYellowText: '#854D0E',
+              badgeBlue: '#E0F2FE',
+              badgeBlueText: '#0369A1',
+              badgePurple: '#F3E8FF',
+              badgePurpleText: '#7E22CE',
+              borderLight: '#EDF0F5'
+            }
+          },
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif']
+          },
+          boxShadow: {
+            soft: '0 4px 20px -2px rgba(16, 24, 40, 0.04), 0 2px 6px -1px rgba(16, 24, 40, 0.02)',
+            cardHover: '0 8px 24px -4px rgba(16, 24, 40, 0.06)'
+          }
+        }
+      }
+    }
+  </script>
+<!-- Google Font: Plus Jakarta Sans -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Custom Styles for Mobile Device Framing and Specific UI Enhancements -->
+<style data-purpose="base-layout">
+    body {
+      background-color: #ECEEF2;
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      margin: 0;
+      padding: 0;
+    }
+    
+    /* Device frame scrollbar concealment */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="flex justify-center items-center min-h-screen p-0 sm:p-4">
+<!-- BEGIN: MobileContainer -->
+<!-- iPhone 15 / 16 style frame -->
+<main class="w-full max-w-[393px] h-[852px] bg-app-bg text-app-textDark flex flex-col justify-between overflow-hidden relative sm:rounded-[48px] sm:shadow-2xl sm:border-[8px] sm:border-slate-800" data-purpose="mobile-screen-frame">
+<!-- BEGIN: TopBarAndHeader -->
+<header class="flex-shrink-0 z-20 pt-2 px-6 bg-app-bg">
+<!-- iOS Status Bar -->
+<div class="h-10 flex items-center justify-between text-xs font-semibold tracking-tight text-slate-800" data-purpose="ios-status-bar">
+<span>9:41</span>
+<div class="flex items-center space-x-1.5">
+<!-- Cellular signal -->
+<svg class="w-3.5 h-3.5 fill-current" viewbox="0 0 24 24">
+<path d="M2 17h3v4H2v-4zm6-5h3v9H8v-9zm6-5h3v14h-3V7zm6-4h3v18h-3V3z"></path>
+</svg>
+<!-- Wifi -->
+<svg class="w-3.5 h-3.5 fill-current" viewbox="0 0 24 24">
+<path d="M12 4C7.31 4 3.07 5.9 0 8.98L12 21 24 8.98A16.88 16.88 0 0 0 12 4zm0 3.5a13.3 13.3 0 0 1 8.5 3.09L12 19.12 3.5 10.59A13.3 13.3 0 0 1 12 7.5z"></path>
+</svg>
+<!-- Battery -->
+<div class="w-5 h-2.5 border border-slate-700 rounded-sm p-0.5 flex items-center">
+<div class="w-full h-full bg-slate-800 rounded-2xs"></div>
+</div>
+</div>
+</div>
+<!-- Navigation Header -->
+<div class="h-12 flex items-center justify-between mt-1" data-purpose="navigation-header">
+<button aria-label="Go back" class="w-9 h-9 rounded-full bg-white border border-app-borderLight flex items-center justify-center text-slate-700 shadow-sm active:scale-95 transition-transform" type="button">
+<svg class="w-4 h-4 stroke-[2.5]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+<h1 class="text-xs font-bold uppercase tracking-wider text-slate-700">Test Results</h1>
+<!-- Balanced spacer -->
+<div class="w-9 h-9 opacity-0"></div>
+</div>
+</header>
+<!-- END: TopBarAndHeader -->
+<!-- BEGIN: ScrollableContent -->
+<section class="flex-1 overflow-y-auto no-scrollbar px-6 pt-2 pb-4 space-y-4" data-purpose="results-summary-content">
+<!-- BEGIN: HeroSection -->
+<!-- Congratulatory message & icon -->
+<div class="text-center pt-2 pb-1" data-purpose="congratulatory-hero">
+<div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-amber-100 text-amber-600 mb-3 shadow-sm border border-amber-200">
+<svg class="w-6 h-6 stroke-[3]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<h2 class="text-2xl font-extrabold text-app-textDark tracking-tight">Great effort.</h2>
+<p class="text-[13px] text-app-textMuted mt-1 px-3 leading-relaxed">
+          You've completed the Trail Making Test. Here is a summary of your performance today.
+        </p>
+</div>
+<!-- END: HeroSection -->
+<!-- BEGIN: PrimaryScoreCard -->
+<!-- Highlighted completion duration metrics -->
+<article class="bg-white rounded-[24px] p-5 text-center shadow-soft border border-app-borderLight" data-purpose="primary-score-card">
+<span class="block text-[11px] font-bold tracking-wider text-slate-400 uppercase">
+          Total Completion Time
+        </span>
+<div class="text-[38px] font-extrabold text-app-textDark tracking-tight my-1">
+          1m 42s
+        </div>
+<div class="inline-flex items-center px-3 py-1 rounded-full bg-yellow-50 border border-yellow-200/60 text-yellow-800 text-[11px] font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-500 mr-1.5"></span>
+          Average Range
+        </div>
+</article>
+<!-- END: PrimaryScoreCard -->
+<!-- BEGIN: PerformanceBreakdownCard -->
+<!-- Granular part A & part B details -->
+<article class="bg-white rounded-[24px] p-5 shadow-soft border border-app-borderLight" data-purpose="breakdown-card">
+<h3 class="text-sm font-bold text-app-textDark tracking-tight mb-4">
+          Performance Breakdown
+        </h3>
+<div class="space-y-3.5">
+<!-- Row 1: Part A -->
+<div class="flex items-center justify-between py-1" data-purpose="metric-part-a">
+<div class="flex items-center space-x-3">
+<div class="w-9 h-9 rounded-full bg-sky-100 text-sky-700 flex items-center justify-center font-bold text-sm">
+                A
+              </div>
+<div>
+<p class="text-xs font-bold text-app-textDark leading-snug">Part A (Numbers)</p>
+<p class="text-[11px] text-app-textMuted leading-tight">Visual search &amp; speed</p>
+</div>
+</div>
+<div class="text-right">
+<span class="text-sm font-bold text-app-textDark">38s</span>
+<span class="block text-[10px] font-medium text-emerald-600">0 errors</span>
+</div>
+</div>
+<div class="h-px bg-slate-100 w-full"></div>
+<!-- Row 2: Part B -->
+<div class="flex items-center justify-between py-1" data-purpose="metric-part-b">
+<div class="flex items-center space-x-3">
+<div class="w-9 h-9 rounded-full bg-teal-100 text-teal-700 flex items-center justify-center font-bold text-sm">
+                B
+              </div>
+<div>
+<p class="text-xs font-bold text-app-textDark leading-snug">Part B (Mixed)</p>
+<p class="text-[11px] text-app-textMuted leading-tight">Cognitive flexibility &amp; shift</p>
+</div>
+</div>
+<div class="text-right">
+<span class="text-sm font-bold text-app-textDark">64s</span>
+<span class="block text-[10px] font-medium text-amber-600">1 error</span>
+</div>
+</div>
+</div>
+</article>
+<!-- END: PerformanceBreakdownCard -->
+<!-- BEGIN: InformationalDisclaimer -->
+<!-- Clinical / Screenings informational disclaimer note -->
+<div class="flex items-start space-x-2.5 p-3 rounded-xl bg-slate-100/70 border border-slate-200/50" data-purpose="medical-disclaimer">
+<svg class="w-4 h-4 text-slate-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="10" stroke-width="2"></circle>
+<path d="M12 16v-4m0-4h.01" stroke-linecap="round" stroke-width="2"></path>
+</svg>
+<p class="text-[10.5px] leading-relaxed text-slate-500 font-normal">
+          These results are for screening purposes only and do not constitute medical diagnosis. If you have concerns about your cognitive health, please discuss these results with a healthcare professional.
+        </p>
+</div>
+<!-- END: InformationalDisclaimer -->
+</section>
+<!-- END: ScrollableContent -->
+<!-- BEGIN: BottomActionFooter -->
+<!-- Action buttons & iPhone indicator bar -->
+<footer class="flex-shrink-0 px-6 pt-2 pb-6 bg-app-bg border-t border-slate-100/80" data-purpose="footer-actions">
+<div class="space-y-2.5">
+<!-- Primary Action -->
+<button class="w-full h-12 bg-app-primary hover:bg-app-primaryHover text-white font-semibold text-sm rounded-full flex items-center justify-center shadow-md active:scale-[0.98] transition-all" type="button">
+<span>Continue to Dashboard</span>
+<svg class="w-4 h-4 ml-1.5 stroke-[2.5]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+<!-- Secondary Action -->
+<button class="w-full py-2 text-center text-xs font-semibold text-slate-600 hover:text-slate-900 active:opacity-75 transition-opacity" type="button">
+          Review Detailed Metrics
+        </button>
+</div>
+<!-- iOS Home Indicator -->
+<div class="w-32 h-1 bg-slate-300 rounded-full mx-auto mt-4" data-purpose="home-indicator"></div>
+</footer>
+<!-- END: BottomActionFooter -->
+</main>
+<!-- END: MobileContainer -->
+</body></html>

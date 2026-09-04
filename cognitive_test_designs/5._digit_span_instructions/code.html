@@ -1,0 +1,123 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport">
+<title>Digit Span Instructions</title>
+<!-- Google Fonts: Plus Jakarta Sans -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS v3 -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              burgundy: '#932742',
+              'burgundy-hover': '#7e2037',
+              cyan: '#38bdf8',
+              'cyan-light': '#e0f2fe',
+              'blue-card': '#eaf4fd',
+              'pink-card': '#fcecee',
+            }
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="custom-layout">
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    /* Hide scrollbars while enabling smooth scroll */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 flex justify-center items-center min-h-screen p-0 sm:p-4 text-slate-800 antialiased selection:bg-rose-100">
+<!-- BEGIN: MobileDeviceFrame -->
+<main class="w-full max-w-[390px] min-h-[844px] bg-[#fbfbfa] flex flex-col justify-between shadow-2xl relative sm:rounded-[44px] overflow-hidden border border-slate-200/80">
+<!-- BEGIN: TopBarAndContent -->
+<div class="flex-1 flex flex-col px-6 pt-6 pb-4 overflow-y-auto no-scrollbar">
+<!-- BEGIN: NavigationHeader -->
+<header class="flex items-center justify-between w-full pt-2 pb-5" data-purpose="screen-header">
+<!-- Back Navigation Button -->
+<button aria-label="Go back" class="w-9 h-9 -ml-1.5 flex items-center justify-center text-slate-700 hover:text-slate-900 transition-colors rounded-full active:bg-slate-100" type="button">
+<svg class="w-5 h-5 stroke-[2.2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+<!-- Centered Active Test Indicator Pill -->
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100/90 text-xs font-semibold text-slate-700 tracking-tight" data-purpose="test-status">
+<span class="w-2 h-2 rounded-full bg-[#0ea5e9]"></span>
+<span class="">Active Test</span>
+</div>
+<!-- Right Preparation Stage Label -->
+<span class="text-[11px] font-medium text-slate-400 tracking-wide">Preparation</span>
+</header>
+<!-- END: NavigationHeader -->
+<!-- BEGIN: ScreenTitleSection -->
+<section class="mt-2 mb-6" data-purpose="instruction-title">
+<h1 class="text-[26px] font-extrabold text-[#111827] tracking-tight leading-snug">
+          Remember the sequence
+        </h1>
+<p class="mt-2 text-[13px] leading-relaxed text-slate-500 font-normal">
+          Numbers will appear on the screen one at a time. Memorize them, then type them back in the exact order they appeared.
+        </p>
+</section>
+<!-- END: ScreenTitleSection -->
+<!-- BEGIN: InstructionalDemonstrationCards -->
+<section class="flex flex-col gap-4 flex-1 justify-center py-2" data-purpose="demonstration-content">
+<!-- Example Visual Card -->
+<div class="bg-[#dcf0fb] rounded-2xl p-5 text-center flex flex-col items-center justify-center shadow-sm">
+<span class="text-[10px] font-bold tracking-wider text-sky-800 uppercase mb-3">
+            For example: If you see
+          </span>
+<!-- Number Flow Display Pill -->
+<div class="bg-white/90 backdrop-blur-sm rounded-xl px-5 py-3 shadow-[0_2px_8px_rgba(0,0,0,0.04)] flex items-center justify-center gap-3">
+<span class="text-2xl font-extrabold text-slate-800">4</span>
+<svg class="w-4 h-4 text-sky-500 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="text-2xl font-extrabold text-slate-800">8</span>
+<svg class="w-4 h-4 text-sky-500 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="text-2xl font-extrabold text-slate-800">2</span>
+</div>
+</div>
+<!-- Mode Explanation Card -->
+<div class="bg-[#dcf0fb]/60 rounded-2xl p-4 flex flex-col gap-1.5 shadow-sm border border-sky-100/60"><div class="flex items-center gap-2"><div class="w-6 h-6 rounded-full bg-sky-200/70 flex items-center justify-center text-sky-800"><svg class="w-3.5 h-3.5 stroke-[2.2]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" stroke-linecap="round" stroke-linejoin="round"></path></svg></div><h2 class="text-sm font-bold text-slate-900 tracking-tight">Forward</h2></div><p class="text-[12px] leading-relaxed text-slate-600 pl-8">Remember and enter the numbers in the exact order they appeared.</p></div><div class="bg-[#fcecee] rounded-2xl p-4 flex flex-col gap-1.5 shadow-sm border border-rose-100/50"><div class="flex items-center gap-2"><div class="w-6 h-6 rounded-full bg-rose-200/70 flex items-center justify-center text-brand-burgundy"><svg class="w-3.5 h-3.5 stroke-[2.2]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" stroke-linecap="round" stroke-linejoin="round"></path></svg></div><h2 class="text-sm font-bold text-slate-900 tracking-tight">Backward</h2></div><p class="text-[12px] leading-relaxed text-slate-600 pl-8">Later, recall and enter the sequence in reverse order.</p></div>
+</section>
+<!-- END: InstructionalDemonstrationCards -->
+</div>
+<!-- END: TopBarAndContent -->
+<!-- BEGIN: BottomActionArea -->
+<footer class="p-6 pt-2 bg-gradient-to-t from-[#fbfbfa] via-[#fbfbfa] to-transparent" data-purpose="action-buttons">
+<!-- Start Practice Button -->
+<button class="w-full py-4 px-6 bg-[#932742] hover:bg-[#7e2037] active:scale-[0.99] transition-all text-white font-semibold text-[15px] rounded-full shadow-lg shadow-[#932742]/20 flex items-center justify-center gap-2" type="button">
+<span class="">Start Practice</span>
+<svg class="w-4 h-4 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+<!-- iOS Home Indicator Spacing -->
+<div aria-hidden="true" class="w-32 h-1 bg-slate-300/60 rounded-full mx-auto mt-5 mb-1"></div>
+</footer>
+<!-- END: BottomActionArea -->
+</main>
+<!-- END: MobileDeviceFrame -->
+
+
+</body></html>

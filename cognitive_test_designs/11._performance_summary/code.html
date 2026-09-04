@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Kawaii Cognitive Assessment - Performance Summary</title>
+<!-- Tailwind CSS v3 -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration for Custom Palette -->
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            burgundy: {
+              DEFAULT: '#9E2A47',
+              dark: '#85213a',
+              light: '#f9eef1',
+            },
+            canvasBg: '#f8f9fd',
+            pastelPink: '#fdeeed',
+            pastelBlue: '#e9f3fd',
+            pastelYellow: '#fef7e6',
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+          }
+        }
+      }
+    };
+  </script>
+<!-- Google Fonts: Plus Jakarta Sans -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<style data-purpose="base-layout">
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      background-color: #f1f3f8;
+      -webkit-font-smoothing: antialiased;
+    }
+    /* Hide scrollbars on mobile frame */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+<style data-purpose="custom-shadows">
+    .card-soft-shadow {
+      box-shadow: 0 4px 18px -2px rgba(158, 42, 71, 0.05), 0 2px 8px -2px rgba(0, 0, 0, 0.03);
+    }
+    .btn-active-state:active {
+      transform: scale(0.985);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-0 md:p-6 bg-slate-100 text-slate-800">
+<!-- BEGIN: MobileDeviceFrame -->
+<main class="w-full max-w-[412px] min-h-screen md:min-h-[844px] md:max-h-[890px] bg-[#fcfbfe] flex flex-col justify-between relative md:rounded-[44px] shadow-2xl md:ring-1 md:ring-black/5 overflow-hidden border-slate-200">
+<!-- Top Scrollable Content Container -->
+<div class="flex-1 overflow-y-auto no-scrollbar pb-6">
+<!-- BEGIN: iOSStatusBar -->
+<div class="w-full pt-3 px-7 pb-2 flex items-center justify-between text-xs font-semibold text-slate-900 select-none" data-purpose="status-bar">
+<span class="tracking-tight text-sm font-semibold">9:41</span>
+<div class="flex items-center space-x-2 text-slate-900">
+<!-- Cellular Signal -->
+<svg class="w-4 h-4 fill-current" viewbox="0 0 24 24">
+<path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L4.35 18.25c-.2.2-.2.51 0 .71.2.2.51.2.71 0l.64-.64C7.24 19.34 9.49 20 12 20s4.76-.66 6.3-1.68l.64.64c.1.1.23.15.35.15s.26-.05.35-.15c.2-.2.2-.51 0-.71l-.62-.64C20.26 16.07 21 14.12 21 12c0-4.97-4.03-9-9-9z" opacity="0.1"></path>
+<rect fill="currentColor" height="6" rx="1.2" width="2.8" x="2" y="15"></rect>
+<rect fill="currentColor" height="10" rx="1.2" width="2.8" x="7" y="11"></rect>
+<rect fill="currentColor" height="14" rx="1.2" width="2.8" x="12" y="7"></rect>
+<rect fill="currentColor" height="18" rx="1.2" width="2.8" x="17" y="3"></rect>
+</svg>
+<!-- Wifi -->
+<svg class="w-4 h-4 fill-current" viewbox="0 0 24 24">
+<path d="M12 4C7.31 4 3.07 5.9 0 8.98L12 21 24 8.98C20.93 5.9 16.69 4 12 4zm0 3.22c3.8 0 7.24 1.49 9.8 3.93L12 19.06 2.2 11.15C4.76 8.71 8.2 7.22 12 7.22z"></path>
+</svg>
+<!-- Battery -->
+<div class="flex items-center">
+<div class="w-5 h-2.5 border border-slate-900 rounded-sm p-0.5 flex items-center">
+<div class="h-full w-3.5 bg-slate-900 rounded-2xs"></div>
+</div>
+<div class="w-0.5 h-1 bg-slate-900 rounded-r-xs ml-0.5"></div>
+</div>
+</div>
+</div>
+<!-- END: iOSStatusBar -->
+<!-- BEGIN: HeaderNavigation -->
+<header class="px-6 pt-3 pb-4 flex items-center justify-between" data-purpose="top-navigation">
+<div class="flex items-center space-x-2">
+<!-- Small decorative location / bullet indicator -->
+<span class="w-2 h-2 rounded-full bg-slate-400 inline-block"></span>
+<span class="text-xs font-bold text-slate-800 tracking-wide uppercase">Progress Summary</span>
+</div>
+<!-- Top Right Avatar Icon -->
+<button aria-label="User Profile" class="w-8 h-8 rounded-full bg-[#9E2A47] flex items-center justify-center text-white shadow-sm ring-2 ring-burgundy-light">
+<svg class="w-4 h-4 fill-current" viewbox="0 0 24 24">
+<path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path>
+</svg>
+</button>
+</header>
+<!-- END: HeaderNavigation -->
+<!-- BEGIN: TitleAndIntro -->
+<section class="px-6 pt-1 pb-4" data-purpose="screen-title">
+<div class="flex items-start justify-between">
+<div>
+<h1 class="text-xl font-extrabold text-slate-900 tracking-tight">Performance Summary</h1>
+<p class="text-xs text-slate-500 mt-1 leading-relaxed max-w-[270px]">
+              Here is an overview of your recent cognitive exercises. This helps track your activity over time.
+            </p>
+</div>
+<!-- Decorative circular icon matching Kawaii style -->
+<div class="w-8 h-8 rounded-full bg-[#fdeeed] flex items-center justify-center text-[#9E2A47] shrink-0 mt-0.5">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<path d="M18 20V10M12 20V4M6 20v-6"></path>
+</svg>
+</div>
+</div>
+</section>
+<!-- END: TitleAndIntro -->
+<!-- BEGIN: PerformanceCardsList -->
+<section class="px-6 space-y-3.5 mt-1" data-purpose="metrics-cards-section">
+<!-- CARD 1: Visuospatial / Memory (Pastel Pink) -->
+<div class="bg-[#fef2f2] rounded-2xl p-4 border border-rose-100 card-soft-shadow" data-purpose="performance-metric-card">
+<!-- Card Header -->
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center space-x-2.5">
+<div class="w-8 h-8 rounded-xl bg-white/90 flex items-center justify-center text-rose-500 shadow-xs">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+<polyline points="2 17 12 22 22 17"></polyline>
+<polyline points="2 12 12 17 22 12"></polyline>
+</svg>
+</div>
+<div>
+<h2 class="text-sm font-bold text-slate-900 leading-none">Visuospatial</h2>
+<span class="text-[11px] font-medium text-slate-400 mt-0.5 block">Oct 21</span>
+</div>
+</div>
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-white/90 text-slate-600 border border-slate-200/60 shadow-2xs">
+              Stable
+            </span>
+</div>
+<!-- Card Metric & Progress -->
+<div class="space-y-1.5 pt-1">
+<div class="flex justify-between items-center text-xs">
+<span class="text-slate-500 font-medium">Accuracy</span>
+<span class="font-bold text-slate-900 text-xs">86%</span>
+</div>
+<!-- Progress Bar -->
+<div class="w-full bg-rose-200/50 rounded-full h-1.5 overflow-hidden">
+<div class="bg-[#9E2A47] h-1.5 rounded-full" style="width: 86%"></div>
+</div>
+</div>
+</div>
+<!-- CARD 2: Reaction Time (Pastel Sky Blue) -->
+<div class="bg-[#eff6ff] rounded-2xl p-4 border border-blue-100 card-soft-shadow" data-purpose="performance-metric-card">
+<!-- Card Header -->
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center space-x-2.5">
+<div class="w-8 h-8 rounded-xl bg-white/90 flex items-center justify-center text-sky-600 shadow-xs">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="10"></circle>
+<polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+</div>
+<div>
+<h2 class="text-sm font-bold text-slate-900 leading-none">Reaction Time</h2>
+<span class="text-[11px] font-medium text-slate-400 mt-0.5 block">Oct 22</span>
+</div>
+</div>
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-white/90 text-slate-600 border border-slate-200/60 shadow-2xs">
+              Stable
+            </span>
+</div>
+<!-- Card Metric & Progress -->
+<div class="space-y-1.5 pt-1">
+<div class="flex justify-between items-center text-xs">
+<span class="text-slate-500 font-medium">Avg. Response</span>
+<span class="font-bold text-slate-900 text-xs">1.2s</span>
+</div>
+<!-- Progress Bar -->
+<div class="w-full bg-sky-200/60 rounded-full h-1.5 overflow-hidden">
+<div class="bg-sky-500 h-1.5 rounded-full" style="width: 72%"></div>
+</div>
+</div>
+</div>
+<!-- CARD 3: Verbal Fluency (Pastel Buttercup Amber) -->
+<div class="bg-[#fffbeb] rounded-2xl p-4 border border-amber-100 card-soft-shadow" data-purpose="performance-metric-card">
+<!-- Card Header -->
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center space-x-2.5">
+<div class="w-8 h-8 rounded-xl bg-white/90 flex items-center justify-center text-amber-500 shadow-xs">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+</svg>
+</div>
+<div>
+<h2 class="text-sm font-bold text-slate-900 leading-none">Verbal Fluency</h2>
+<span class="text-[11px] font-medium text-slate-400 mt-0.5 block">Oct 20</span>
+</div>
+</div>
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-white/90 text-amber-700 border border-amber-200/60 shadow-2xs">
+              Review
+            </span>
+</div>
+<!-- Card Metric & Progress -->
+<div class="space-y-1.5 pt-1">
+<div class="flex justify-between items-center text-xs">
+<span class="text-slate-500 font-medium">Words Recalled</span>
+<span class="font-bold text-slate-900 text-xs">18</span>
+</div>
+<!-- Progress Bar -->
+<div class="w-full bg-amber-200/60 rounded-full h-1.5 overflow-hidden">
+<div class="bg-amber-500 h-1.5 rounded-full" style="width: 58%"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- END: PerformanceCardsList -->
+<!-- BEGIN: ActionCTA -->
+<section class="px-6 mt-6" data-purpose="primary-action-section">
+<button class="btn-active-state w-full bg-[#9E2A47] hover:bg-[#85213a] text-white py-3.5 px-5 rounded-2xl font-bold text-sm tracking-wide flex items-center justify-center space-x-2 shadow-md transition-all duration-200" type="button">
+<svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24">
+<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+<polyline points="7 10 12 15 17 10"></polyline>
+<line x1="12" x2="12" y1="15" y2="3"></line>
+</svg>
+<span>Download Report</span>
+</button>
+</section>
+<!-- END: ActionCTA -->
+<!-- BEGIN: MedicalDisclaimer -->
+<section class="px-6 mt-5" data-purpose="medical-disclaimer">
+<div class="flex items-start space-x-2.5 bg-slate-50 border border-slate-200/60 rounded-xl p-3">
+<div class="w-4 h-4 text-slate-400 shrink-0 mt-0.5">
+<svg class="w-4 h-4 fill-current" viewbox="0 0 24 24">
+<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path>
+</svg>
+</div>
+<p class="text-[10.5px] leading-relaxed text-slate-400 font-normal">
+            This summary is for monitoring purposes only and is not a diagnostic tool. Please share these results with your healthcare provider for professional evaluation.
+          </p>
+</div>
+</section>
+<!-- END: MedicalDisclaimer -->
+</div>
+<!-- End Scrollable Area -->
+<!-- BEGIN: BottomNavigationAndHomeBar -->
+<footer class="w-full bg-white border-t border-slate-100 shrink-0" data-purpose="persistent-bottom-navigation">
+<!-- Nav Tabs -->
+<nav class="flex items-center justify-around pt-2.5 pb-1.5 px-6">
+<!-- Tab 1: Home -->
+<a class="flex flex-col items-center justify-center text-slate-400 hover:text-slate-600 transition-colors w-14" href="#home">
+<svg class="w-5 h-5 stroke-current" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewbox="0 0 24 24">
+<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+<polyline points="9 22 9 12 15 12 15 22"></polyline>
+</svg>
+<span class="text-[10px] font-medium mt-1">Home</span>
+</a>
+<!-- Tab 2: Tests -->
+<a class="flex flex-col items-center justify-center text-slate-400 hover:text-slate-600 transition-colors w-14" href="#tests">
+<svg class="w-5 h-5 stroke-current" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewbox="0 0 24 24">
+<rect height="7" rx="1.5" width="7" x="3" y="3"></rect>
+<rect height="7" rx="1.5" width="7" x="14" y="3"></rect>
+<rect height="7" rx="1.5" width="7" x="14" y="14"></rect>
+<rect height="7" rx="1.5" width="7" x="3" y="14"></rect>
+</svg>
+<span class="text-[10px] font-medium mt-1">Tests</span>
+</a>
+<!-- Tab 3: Summary (Active Tab) -->
+<a aria-current="page" class="flex flex-col items-center justify-center text-[#9E2A47] font-bold w-14" href="#summary">
+<!-- Active Highlight Indicator Pill -->
+<div class="w-9 h-7 rounded-full bg-[#fdeeed] flex items-center justify-center text-[#9E2A47] mb-0.5">
+<svg class="w-4 h-4 fill-current" viewbox="0 0 24 24">
+<path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zM16.2 13H19v6h-2.8z"></path>
+</svg>
+</div>
+<span class="text-[10px] text-[#9E2A47]">Summary</span>
+</a>
+</nav>
+<!-- iOS Home Indicator -->
+<div class="w-full flex justify-center pb-2 pt-1">
+<div class="w-32 h-1 bg-slate-300 rounded-full"></div>
+</div>
+</footer>
+<!-- END: BottomNavigationAndHomeBar -->
+</main>
+<!-- END: MobileDeviceFrame -->
+</body></html>

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Tests Library - Cognitive Assessments</title>
+<!-- Tailwind CSS v3 with plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              plum: '#8C2B43',
+              plumDark: '#752136',
+              plumLight: '#A33450',
+              bgPink: '#FCEDEE',
+              bgBlue: '#EAF3FB',
+              bgPeach: '#FDF1E7',
+            },
+            neutral: {
+              cardTitle: '#202224',
+              bodyMuted: '#676D75',
+              borderMuted: '#E5E7EB',
+            }
+          },
+          fontFamily: {
+            sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Text"', '"SF Pro Display"', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
+          },
+          boxShadow: {
+            'soft': '0 2px 8px -2px rgba(0, 0, 0, 0.05), 0 1px 4px -1px rgba(0, 0, 0, 0.02)',
+            'nav': '0 -4px 16px -2px rgba(0, 0, 0, 0.04)',
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="custom-overrides">
+    /* Native iOS smooth tap and scrolling */
+    * {
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    body {
+      background-color: #F8F9FA;
+    }
+  </style>
+</head>
+<body class="font-sans antialiased text-gray-900 min-h-screen flex justify-center bg-gray-100">
+<!-- Main Mobile Device Screen Container (iOS Viewport) -->
+<div class="w-full max-w-[420px] bg-white min-h-screen flex flex-col justify-between shadow-2xl relative overflow-x-hidden">
+<!-- BEGIN: TopBar & Header -->
+<header class="px-5 pt-8 pb-3 bg-white" data-purpose="screen-header">
+<!-- Top Bar: Title & Profile Avatar -->
+<div class="flex items-center justify-between mb-5">
+<div class="flex items-center gap-1.5">
+<!-- Chevron icon or subtle category icon -->
+<svg class="w-4 h-4 text-brand-plum" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24">
+<path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="text-sm font-semibold tracking-tight text-gray-800">Tests Library</span>
+</div>
+<!-- Profile Avatar with plum background -->
+<button aria-label="User Profile" class="w-8 h-8 rounded-full bg-brand-plum flex items-center justify-center text-white shadow-sm active:scale-95 transition-transform" type="button">
+<svg class="w-4 h-4" fill="currentColor" viewbox="0 0 20 20">
+<path clip-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" fill-rule="evenodd"></path>
+</svg>
+</button>
+</div>
+<!-- Main Headline & Subtitle -->
+<div class="space-y-1.5 pr-2">
+<h1 class="text-2xl font-bold tracking-tight text-gray-900 leading-tight">Cognitive Tests</h1>
+<p class="text-xs leading-relaxed text-neutral-bodyMuted">
+          Select an assessment to begin. Ensure you are in a quiet, distraction-free environment.
+        </p>
+</div>
+</header>
+<!-- END: TopBar & Header -->
+<!-- BEGIN: TestCardList -->
+<main class="flex-1 px-5 py-2 space-y-3.5 overflow-y-auto" data-purpose="test-cards-container">
+<!-- Card 1: Stroop Test -->
+<article class="relative bg-brand-bgPink rounded-2xl p-4 border border-rose-100/60 shadow-soft cursor-pointer active:scale-[0.99] transition-transform">
+<!-- Card Header: Title & Time Duration Badge -->
+<div class="flex items-start justify-between mb-1.5">
+<div class="flex items-center gap-2">
+<!-- Icon/Symbol dot indicator -->
+<span class="w-2.5 h-2.5 rounded-full bg-brand-plum"></span>
+<h2 class="text-base font-bold text-neutral-cardTitle tracking-tight">Stroop Test</h2>
+</div>
+<!-- Duration pill -->
+<div class="flex items-center gap-1 bg-white/70 px-2 py-0.5 rounded-full text-[11px] font-medium text-gray-600 shadow-xs">
+<svg class="w-3 h-3 text-gray-500" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="9"></circle>
+<path d="M12 7v5l3 2" stroke-linecap="round"></path>
+</svg>
+<span>3 min</span>
+</div>
+</div>
+<!-- Description -->
+<p class="text-[11.5px] leading-relaxed text-gray-600 mb-3 pl-4.5">
+          Evaluates selective attention, cognitive flexibility, and processing...
+        </p>
+<!-- Category Tags -->
+<div class="flex flex-wrap gap-1.5 mb-3 pl-4.5">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-medium bg-[#86C1D9]/30 text-[#1B4B66]">
+            Attention
+          </span>
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-medium bg-[#E6BC5C]/35 text-[#5C4509]">
+            Executive Function
+          </span>
+</div>
+<!-- Card Footer: Status indicator -->
+<div class="flex items-center gap-1.5 text-[11px] font-medium text-gray-400 pl-4.5">
+<span class="w-2 h-2 rounded-full border border-gray-400"></span>
+<span>Not Started</span>
+</div>
+</article>
+<!-- Card 2: Digit Span -->
+<article class="relative bg-brand-bgBlue rounded-2xl p-4 border border-sky-100/60 shadow-soft cursor-pointer active:scale-[0.99] transition-transform">
+<!-- Card Header: Title & Time Duration Badge -->
+<div class="flex items-start justify-between mb-1.5">
+<div class="flex items-center gap-2">
+<!-- Icon/Symbol dot indicator -->
+<span class="w-2.5 h-2.5 rounded-full bg-[#3B82F6]"></span>
+<h2 class="text-base font-bold text-neutral-cardTitle tracking-tight">Digit Span</h2>
+</div>
+<!-- Duration pill -->
+<div class="flex items-center gap-1 bg-white/70 px-2 py-0.5 rounded-full text-[11px] font-medium text-gray-600 shadow-xs">
+<svg class="w-3 h-3 text-gray-500" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="9"></circle>
+<path d="M12 7v5l3 2" stroke-linecap="round"></path>
+</svg>
+<span>4 min</span>
+</div>
+</div>
+<!-- Description -->
+<p class="text-[11.5px] leading-relaxed text-gray-600 mb-3 pl-4.5">
+          Measures working memory capacity by asking you to recall sequences of...
+        </p>
+<!-- Category Tags -->
+<div class="flex flex-wrap gap-1.5 mb-3 pl-4.5">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-medium bg-[#70C5DD]/35 text-[#134D62]">
+            Working Memory
+          </span>
+</div>
+<!-- Card Footer: Status indicator -->
+<div class="flex items-center gap-1.5 text-[11px] font-medium text-gray-400 pl-4.5">
+<span class="w-2 h-2 rounded-full border border-gray-400"></span>
+<span>Not Started</span>
+</div>
+</article>
+<!-- Card 3: Trail Making -->
+<article class="relative bg-brand-bgPeach rounded-2xl p-4 border border-amber-100/60 shadow-soft cursor-pointer active:scale-[0.99] transition-transform">
+<!-- Card Header: Title & Time Duration Badge -->
+<div class="flex items-start justify-between mb-1.5">
+<div class="flex items-center gap-2">
+<!-- Icon/Symbol dot indicator -->
+<span class="w-2.5 h-2.5 rounded-full bg-[#E06D53]"></span>
+<h2 class="text-base font-bold text-neutral-cardTitle tracking-tight">Trail Making</h2>
+</div>
+<!-- Duration pill -->
+<div class="flex items-center gap-1 bg-white/70 px-2 py-0.5 rounded-full text-[11px] font-medium text-gray-600 shadow-xs">
+<svg class="w-3 h-3 text-gray-500" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="9"></circle>
+<path d="M12 7v5l3 2" stroke-linecap="round"></path>
+</svg>
+<span>4 min</span>
+</div>
+</div>
+<!-- Description -->
+<p class="text-[11.5px] leading-relaxed text-gray-600 mb-3 pl-4.5">
+          Assesses visual search speed, scanning, speed of processing...
+        </p>
+<!-- Category Tags -->
+<div class="flex flex-wrap gap-1.5 mb-3 pl-4.5">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-medium bg-[#78C8DF]/35 text-[#144E61]">
+            Visual Scanning
+          </span>
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-medium bg-[#E7B863]/35 text-[#543E07]">
+            Processing Speed
+          </span>
+</div>
+<!-- Card Footer: Status indicator -->
+<div class="flex items-center gap-1.5 text-[11px] font-medium text-gray-400 pl-4.5">
+<span class="w-2 h-2 rounded-full border border-gray-400"></span>
+<span>Not Started</span>
+</div>
+</article>
+</main>
+<!-- END: TestCardList -->
+<!-- BEGIN: BottomNavigation -->
+<nav class="bg-white border-t border-gray-100 px-6 pt-2.5 pb-6 flex items-center justify-between shadow-nav z-20" data-purpose="mobile-bottom-tabbar">
+<!-- Home Tab -->
+<a class="flex flex-col items-center justify-center text-gray-400 hover:text-gray-600 transition-colors w-16 group" href="#home">
+<svg class="w-5 h-5 mb-1 stroke-current" fill="none" stroke-width="2" viewbox="0 0 24 24">
+<path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="text-[10px] font-medium">Home</span>
+</a>
+<!-- Tests Tab (Active) -->
+<a class="flex flex-col items-center justify-center w-16" href="#tests">
+<!-- Deep plum active circle button -->
+<div class="w-9 h-9 rounded-full bg-brand-plum text-white flex items-center justify-center shadow-md mb-0.5">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<span class="text-[10px] font-semibold text-brand-plum">Tests</span>
+</a>
+<!-- Summary Tab -->
+<a class="flex flex-col items-center justify-center text-gray-400 hover:text-gray-600 transition-colors w-16 group" href="#summary">
+<svg class="w-5 h-5 mb-1 stroke-current" fill="none" stroke-width="2" viewbox="0 0 24 24">
+<path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="text-[10px] font-medium">Summary</span>
+</a>
+</nav>
+<!-- END: BottomNavigation -->
+</div>
+</body></html>

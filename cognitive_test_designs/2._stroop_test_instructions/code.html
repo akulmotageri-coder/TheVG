@@ -1,0 +1,120 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<title>Kawaii Stroop Test - Instructions</title>
+<!-- Tailwind CSS v3 -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            burgundy: {
+              DEFAULT: '#9E2A47',
+              hover: '#87233c',
+            },
+            appBg: '#FAFAF9',
+            stroopBlue: '#58C2DE',
+          },
+          fontFamily: {
+            sans: ['-apple-system', 'BlinkMacSystemFont', 'SF Pro Text', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'sans-serif'],
+          },
+          boxShadow: {
+            'soft-card': '0 8px 30px rgba(0, 0, 0, 0.04)',
+          }
+        }
+      }
+    }
+  </script>
+<!-- BEGIN: Custom iOS & Layout Styles -->
+<style data-purpose="custom-layout">
+    /* iOS Safe Area Adjustments & Clean Scroll Behavior */
+    body {
+      -webkit-tap-highlight-color: transparent;
+      background-color: #FAFAF9;
+    }
+    .safe-top {
+      padding-top: env(safe-area-inset-top, 16px);
+    }
+    .safe-bottom {
+      padding-bottom: env(safe-area-inset-bottom, 24px);
+    }
+  </style>
+<!-- END: Custom iOS & Layout Styles -->
+</head>
+<body class="bg-appBg text-stone-800 min-h-screen flex flex-col justify-between items-center selection:bg-rose-100 font-sans antialiased">
+<!-- Mobile Screen Frame Constraint -->
+<div class="w-full max-w-md min-h-screen flex flex-col justify-between px-6 safe-top safe-bottom pb-8 pt-4">
+<!-- BEGIN: Top Navigation Bar -->
+<header class="w-full flex items-center justify-between pt-2 pb-6" data-purpose="top-navigation">
+<!-- Back Arrow Button -->
+<button aria-label="Go back" class="w-10 h-10 flex items-center justify-center -ml-2 rounded-full text-stone-600 hover:bg-stone-100 active:scale-95 transition" type="button">
+<svg class="w-5 h-5 stroke-[2.2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+<!-- Active Test Pill Indicator -->
+<div class="inline-flex items-center space-x-1.5 px-3 py-1 bg-stone-100/80 rounded-full text-xs font-medium text-stone-600">
+<span class="w-1.5 h-1.5 rounded-full bg-cyan-500 inline-block"></span>
+<span class="">Active Test</span>
+</div>
+<!-- Placeholder to preserve symmetrical flex spacing -->
+<div class="w-10"></div>
+</header>
+<!-- END: Top Navigation Bar -->
+<!-- BEGIN: Main Content Area -->
+<main class="w-full flex-1 flex flex-col justify-center items-center my-auto">
+<!-- Section: Instruction Header -->
+<div class="text-center mb-8 px-2" data-purpose="header-section">
+<h1 class="text-2xl font-bold text-stone-900 tracking-tight mb-2">Stroop Test</h1>
+<p class="text-stone-500 text-sm leading-relaxed max-w-xs mx-auto">
+          Select the colour of the letters, not the word.
+        </p>
+</div>
+<!-- Section: Stroop Example Demonstration Card -->
+<div class="w-full bg-white rounded-3xl border border-stone-100 p-8 shadow-soft-card flex flex-col items-center text-center transition-all duration-300 hover:shadow-md" data-purpose="stroop-example-card">
+<!-- Small Subtitle / Label -->
+<span class="text-[11px] font-semibold tracking-widest text-stone-400 uppercase mb-8">
+          EXAMPLE
+        </span>
+<!-- Stroop Word Display with Intentional Color Conflict -->
+<div class="mb-10 select-none">
+<span class="text-4xl sm:text-5xl font-extrabold tracking-wider text-stroopBlue">
+            GREEN
+          </span>
+</div>
+<!-- Sample Response Options Demonstration -->
+<div class="grid grid-cols-2 gap-2.5 w-full max-w-[220px]" data-purpose="sample-answers">
+  <div class="py-2 px-3 border border-stone-200 rounded-xl text-xs font-medium text-stone-500 text-center bg-transparent">
+    Green
+  </div>
+  <div class="py-2 px-3 bg-blue-900/90 text-white rounded-xl text-xs font-medium text-center shadow-sm">
+    Blue
+  </div>
+  <div class="py-2 px-3 border border-stone-200 rounded-xl text-xs font-medium text-stone-500 text-center bg-transparent">
+    Red
+  </div>
+  <div class="py-2 px-3 border border-stone-200 rounded-xl text-xs font-medium text-stone-500 text-center bg-transparent">
+    Yellow
+  </div>
+</div>
+</div>
+</main>
+<!-- END: Main Content Area -->
+<!-- BEGIN: Action Footer -->
+<footer class="w-full flex flex-col items-center pt-8" data-purpose="footer-actions">
+<!-- Primary Action: Start Practice Button -->
+<button class="w-full py-4 px-6 bg-burgundy hover:bg-burgundy-hover active:scale-[0.98] text-white font-medium text-base rounded-full shadow-sm flex items-center justify-center space-x-2 transition-all duration-200" type="button">
+<span class="">Start Practice</span>
+<span class="text-lg leading-none">→</span>
+</button>
+<!-- Secondary Help Link -->
+<button class="mt-4 text-xs font-medium text-stone-400 hover:text-stone-600 transition-colors py-1 px-3" type="button">
+        Need help?
+      </button>
+</footer>
+<!-- END: Action Footer -->
+</div>
+
+
+</body></html>

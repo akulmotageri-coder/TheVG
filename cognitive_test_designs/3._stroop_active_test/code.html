@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Stroop Active Test</title>
+<!-- Tailwind CSS v3 CDN with forms and container queries -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            appBg: '#FAFAFB',
+            cardBg: '#FFFFFF',
+            accentBurgundy: '#9B324A',
+            charcoal: '#2D3142',
+            softGray: '#F3F4F6',
+            borderColor: '#EDEDF2'
+          },
+          fontFamily: {
+            sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Text"', '"SF Pro Display"', 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', 'sans-serif']
+          },
+          boxShadow: {
+            'card-subtle': '0 4px 20px -2px rgba(0, 0, 0, 0.03), 0 2px 6px -1px rgba(0, 0, 0, 0.02)'
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="custom-ios-tuning">
+    /* Ensure clean mobile viewport experience */
+    body {
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-0 sm:p-4 font-sans antialiased text-gray-800 selection:bg-rose-100">
+<!-- BEGIN: MobileDeviceContainer -->
+<main class="w-full max-w-[390px] h-[100dvh] max-h-[844px] bg-[#FAF9FB] flex flex-col justify-between shadow-2xl relative overflow-hidden sm:rounded-[40px] border border-gray-200" data-purpose="mobile-screen-container">
+<!-- BEGIN: TopBarSection -->
+<header class="pt-12 px-6 pb-2" data-purpose="top-navigation">
+<!-- Nav Header: Back Icon & Active Test Status -->
+<div class="flex items-center space-x-3 mb-5">
+<button aria-label="Go back" class="p-1 -ml-1 text-gray-700 hover:text-gray-900 transition-colors focus:outline-none" type="button">
+<svg class="w-5 h-5 stroke-[2.5]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+<div class="flex items-center space-x-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-teal-500 inline-block"></span>
+<span class="text-xs font-semibold tracking-wide text-gray-700 uppercase">Active Test</span>
+</div>
+</div>
+<!-- Trial Progress & Practice Mode Indicator -->
+<div class="space-y-2" data-purpose="trial-progress-tracker">
+<!-- Progress Bar Indicator -->
+<div class="w-full bg-gray-200/70 h-1.5 rounded-full overflow-hidden">
+<div class="bg-[#9B324A] h-full rounded-full transition-all duration-300" style="width: 10%;"></div>
+</div>
+<div class="flex items-center justify-between text-xs pt-0.5">
+<span class="font-medium text-gray-500">Trial 2 of 20</span>
+<span class="px-2 py-0.5 rounded-full bg-orange-50/80 text-orange-600/90 text-[11px] font-medium border border-orange-200/50">
+            Practice Mode
+          </span>
+</div>
+</div>
+</header>
+<!-- END: TopBarSection -->
+<!-- BEGIN: CenterStageSection -->
+<section class="flex-1 flex flex-col items-center justify-center px-6 -mt-4" data-purpose="stroop-challenge-area">
+<!-- Instruction Text -->
+<p class="text-center text-xs font-normal text-gray-500 mb-8 tracking-tight">
+        Tap the color of the ink, not the word.
+      </p>
+<!-- Central Stimulus Card -->
+<div class="w-full aspect-[4/3] max-h-56 bg-white rounded-3xl border border-gray-100 shadow-card-subtle flex items-center justify-center px-4" data-purpose="stimulus-card">
+<h1 class="text-4xl tracking-wider font-extrabold text-[#3E424B] select-none" id="stimulus-word">
+          YELLOW
+        </h1>
+</div>
+</section>
+<!-- END: CenterStageSection -->
+<!-- BEGIN: BottomAnswerGridSection -->
+<footer class="p-6 pb-12 w-full" data-purpose="response-button-grid">
+<div class="grid grid-cols-2 gap-3.5">
+<!-- RED Option -->
+<button class="stroop-btn h-14 rounded-2xl bg-white/90 hover:bg-gray-50 active:bg-gray-100 border border-gray-200/80 shadow-sm text-xs font-bold tracking-wider text-gray-700 transition-all duration-150 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-rose-200" data-color="RED" type="button">
+          RED
+        </button>
+<!-- BLUE Option -->
+<button class="stroop-btn h-14 rounded-2xl bg-white/90 hover:bg-gray-50 active:bg-gray-100 border border-gray-200/80 shadow-sm text-xs font-bold tracking-wider text-gray-700 transition-all duration-150 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-rose-200" data-color="BLUE" type="button">
+          BLUE
+        </button>
+<!-- GREEN Option -->
+<button class="stroop-btn h-14 rounded-2xl bg-white/90 hover:bg-gray-50 active:bg-gray-100 border border-gray-200/80 shadow-sm text-xs font-bold tracking-wider text-gray-700 transition-all duration-150 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-rose-200" data-color="GREEN" type="button">
+          GREEN
+        </button>
+<!-- YELLOW Option -->
+<button class="stroop-btn h-14 rounded-2xl bg-white/90 hover:bg-gray-50 active:bg-gray-100 border border-gray-200/80 shadow-sm text-xs font-bold tracking-wider text-gray-700 transition-all duration-150 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-rose-200" data-color="YELLOW" type="button">
+          YELLOW
+        </button>
+</div>
+<!-- iOS Home Bar Indicator Line -->
+<div class="w-32 h-1 bg-gray-300 rounded-full mx-auto mt-8 opacity-60"></div>
+</footer>
+<!-- END: BottomAnswerGridSection -->
+</main>
+<!-- END: MobileDeviceContainer -->
+<!-- BEGIN: InteractiveScript -->
+<script data-purpose="button-feedback">
+    document.querySelectorAll('.stroop-btn').forEach(button => {
+      button.addEventListener('click', () => {
+        // Feedback tap visual bounce
+        button.classList.add('scale-95', 'bg-gray-100');
+        setTimeout(() => {
+          button.classList.remove('scale-95', 'bg-gray-100');
+        }, 120);
+      });
+    });
+  </script>
+<!-- END: InteractiveScript -->
+</body></html>

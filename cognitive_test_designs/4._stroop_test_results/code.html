@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Kawaii Stroop - Test Results</title>
+<!-- Google Fonts: Plus Jakarta Sans -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              burgundy: '#932742',
+              burgundyHover: '#7e2037',
+              dark: '#1e2022',
+              muted: '#6b7280',
+              bgLight: '#fbfbfb',
+              accentPink: '#feeef1',
+              cardBlue: '#ebf4fa',
+              badgePink: '#ffdfe5',
+            }
+          },
+          borderRadius: {
+            '3xl': '28px',
+            '4xl': '32px',
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="custom-layout">
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+    /* iOS notch padding compensation */
+    .safe-top {
+      padding-top: env(safe-area-inset-top, 24px);
+    }
+    .safe-bottom {
+      padding-bottom: env(safe-area-inset-bottom, 24px);
+    }
+  </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-0 sm:p-4 text-slate-800">
+<!-- BEGIN: MobileDeviceContainer -->
+<main class="w-full max-w-[390px] min-h-screen sm:min-h-[844px] bg-[#fbfbfb] flex flex-col justify-between shadow-2xl relative sm:rounded-[44px] overflow-hidden border border-gray-100">
+<!-- Top safe area header -->
+<div class="px-5 pt-8 pb-3">
+<!-- BEGIN: NavigationBar -->
+<header class="flex items-center space-x-3 mb-4" data-purpose="screen-header">
+<button aria-label="Go Back" class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-gray-100 active:scale-95 transition-all text-gray-800 -ml-1" type="button">
+<!-- Back Arrow SVG -->
+<svg class="w-5 h-5 stroke-current stroke-2" fill="none" viewbox="0 0 24 24">
+<path d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+<h1 class="text-sm font-semibold tracking-tight text-slate-800">Test Results</h1>
+</header>
+<!-- END: NavigationBar -->
+<!-- BEGIN: TitleSection -->
+<section class="mb-5" data-purpose="results-introduction">
+<h2 class="text-2xl font-bold tracking-tight text-slate-900 mb-1">Your Results</h2>
+<p class="text-xs leading-relaxed text-gray-500 font-medium max-w-[290px]">
+          Great job completing the Stroop Test! Here is a summary of your performance.
+        </p>
+</section>
+<!-- END: TitleSection -->
+<!-- BEGIN: PrimaryScoreCard -->
+<section class="bg-gradient-to-b from-[#ffebee]/90 via-[#fff3f5]/70 to-[#fff8f9] rounded-3xl p-5 mb-4 border border-rose-100/70 shadow-sm" data-purpose="accuracy-score-card">
+<!-- Circular Accuracy Indicator -->
+<div class="flex flex-col items-center justify-center mb-5">
+<div class="w-24 h-24 rounded-full bg-white/95 shadow-sm border border-rose-100 flex flex-col items-center justify-center relative mb-2.5">
+<span class="text-3xl font-extrabold tracking-tight text-[#932742]">92%</span>
+</div>
+<!-- Pill Tag -->
+<div class="inline-flex items-center px-3 py-1 rounded-full bg-[#ffdfe5] text-[#932742] text-[11px] font-semibold tracking-wide shadow-xs">
+            Excellent Accuracy
+          </div>
+</div>
+<!-- Metrics Grid Inside Card -->
+<div class="grid grid-cols-2 gap-3 mb-3">
+<!-- Metric: Correct -->
+<div class="bg-white/80 backdrop-blur-sm rounded-2xl p-3 border border-rose-50/60 shadow-xs flex flex-col items-center text-center">
+<div class="flex items-center space-x-1 mb-1">
+<svg class="w-3.5 h-3.5 text-emerald-500 stroke-[2.5]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M4.5 12.75l6 6 9-13.5" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="text-[11px] font-medium text-gray-500">Correct</span>
+</div>
+<div class="text-lg font-bold text-slate-800 tracking-tight">46 / 50</div>
+</div>
+<!-- Metric: Errors -->
+<div class="bg-white/80 backdrop-blur-sm rounded-2xl p-3 border border-rose-50/60 shadow-xs flex flex-col items-center text-center">
+<div class="flex items-center space-x-1 mb-1">
+<svg class="w-3.5 h-3.5 text-rose-500 stroke-[2.5]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="text-[11px] font-medium text-gray-500">Errors</span>
+</div>
+<div class="text-lg font-bold text-slate-800 tracking-tight">4</div>
+</div>
+</div>
+<!-- Metric: Avg Response Time -->
+<div class="bg-white/80 backdrop-blur-sm rounded-2xl px-4 py-3 border border-rose-50/60 shadow-xs flex items-center justify-between">
+<div>
+<div class="text-[11px] font-medium text-gray-500 mb-0.5">Avg. Response Time</div>
+<div class="text-base font-bold text-slate-800 tracking-tight">0.8s</div>
+</div>
+<!-- Sparkline / Mini Bar Chart Graphic -->
+<div aria-label="Response Time Consistency Bar Graph" class="flex items-end space-x-1 h-6 pr-1">
+<div class="w-1.5 h-3 bg-amber-200 rounded-full"></div>
+<div class="w-1.5 h-4 bg-amber-300 rounded-full"></div>
+<div class="w-1.5 h-6 bg-amber-400 rounded-full"></div>
+<div class="w-1.5 h-3.5 bg-amber-300 rounded-full"></div>
+<div class="w-1.5 h-5 bg-amber-400 rounded-full"></div>
+</div>
+</div>
+</section>
+<!-- END: PrimaryScoreCard -->
+<!-- BEGIN: FeedbackCard -->
+<section class="bg-[#ebf4fa] rounded-2xl p-4 mb-4 border border-blue-100/50" data-purpose="cognitive-pace-feedback">
+<div class="flex items-start space-x-3">
+<!-- Pace Icon -->
+<div class="w-7 h-7 rounded-full bg-blue-200/60 text-blue-600 flex items-center justify-center flex-shrink-0 mt-0.5">
+<svg class="w-4 h-4 fill-current" viewbox="0 0 20 20">
+<path clip-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" fill-rule="evenodd"></path>
+</svg>
+</div>
+<div>
+<h3 class="text-xs font-bold text-slate-800 mb-1">Consistent Pace</h3>
+<p class="text-[11px] leading-relaxed text-slate-600">
+              Your reaction times remained steady even when the colors mismatched the words. This shows strong cognitive flexibility.
+            </p>
+</div>
+</div>
+</section>
+<!-- END: FeedbackCard -->
+<!-- BEGIN: Disclaimer -->
+<footer class="flex items-center justify-center space-x-1 text-center px-4" data-purpose="medical-disclaimer">
+<svg class="w-3.5 h-3.5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="10" stroke-width="1.5"></circle>
+<path d="M12 16v-4m0-4h.01" stroke-linecap="round" stroke-width="1.5"></path>
+</svg>
+<span class="text-[10px] text-gray-400 font-normal">
+          This tool is for educational purposes and is not a medical diagnosis.
+        </span>
+</footer>
+<!-- END: Disclaimer -->
+</div>
+<!-- BEGIN: BottomActionButtons -->
+<div class="p-5 safe-bottom bg-[#fbfbfb]" data-purpose="action-buttons-group">
+<!-- Continue Button -->
+<button class="w-full h-12 bg-[#932742] hover:bg-[#7e2037] active:scale-[0.98] transition-all text-white font-semibold text-sm rounded-full shadow-md shadow-rose-900/10 mb-2.5 flex items-center justify-center" type="button">
+        Continue
+      </button>
+<!-- Take Again Button -->
+<button class="w-full h-12 bg-white active:bg-gray-50 border border-gray-200 active:scale-[0.98] transition-all text-[#932742] font-semibold text-sm rounded-full flex items-center justify-center" type="button">
+        Take Again
+      </button>
+</div>
+<!-- END: BottomActionButtons -->
+</main>
+<!-- END: MobileDeviceContainer -->
+</body></html>

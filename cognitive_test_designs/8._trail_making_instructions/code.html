@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Trail Making - Instructions</title>
+<!-- Tailwind CSS v3 -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Plus Jakarta Sans -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<style data-purpose="typography">
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+  </style>
+<style data-purpose="custom-colors-and-theme">
+    :root {
+      --color-primary: #9e2a47;
+      --color-primary-hover: #86213a;
+      --bg-cream-soft: #FFF9ED;
+      --border-cream: #FBE8C5;
+      --bg-pink-soft: #FDF2F4;
+      --border-pink: #F7D5DC;
+    }
+  </style>
+</head>
+<body class="bg-[#f2f4f8] text-slate-800 min-h-screen flex items-center justify-center p-0 sm:p-4 selection:bg-[#9e2a47]/10 selection:text-[#9e2a47]">
+<!-- BEGIN: MobileContainer -->
+<main class="w-full max-w-[400px] h-[100dvh] sm:h-[844px] bg-[#fbfbff] sm:rounded-[44px] shadow-2xl flex flex-col justify-between overflow-hidden relative border-0 sm:border-[8px] sm:border-slate-900" data-purpose="app-viewport">
+<!-- BEGIN: iOSStatusBar -->
+<header class="w-full pt-3 px-7 pb-1 flex justify-between items-center shrink-0 z-20" data-purpose="status-bar">
+<!-- Time indicator -->
+<span class="text-[14px] font-bold text-slate-800 tracking-tight">9:41</span>
+<!-- Dynamic Island / Speaker cutout simulation for device frame -->
+<div class="w-24 h-4 bg-transparent rounded-full hidden sm:block"></div>
+<!-- Status Icons -->
+<div class="flex items-center space-x-1.5 text-slate-800">
+<!-- Cellular -->
+<svg class="w-4 h-3.5 fill-current" viewbox="0 0 17 12">
+<rect height="3" rx="0.5" width="2.5" x="0" y="9"></rect>
+<rect height="5.5" rx="0.5" width="2.5" x="4" y="6.5"></rect>
+<rect height="8" rx="0.5" width="2.5" x="8" y="4"></rect>
+<rect height="11" rx="0.5" width="2.5" x="12" y="1"></rect>
+</svg>
+<!-- Wifi -->
+<svg class="w-3.5 h-3.5 fill-current" viewbox="0 0 16 12">
+<path d="M8 12a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm6.364-8.364a9.96 9.96 0 00-12.728 0 .75.75 0 01-1.06-1.06 11.46 11.46 0 0114.848 0 .75.75 0 11-1.06 1.06zm-2.828 2.828a5.978 5.978 0 00-7.072 0 .75.75 0 11-.99-1.132 7.478 7.478 0 018.842 0 .75.75 0 11-.78 1.132z"></path>
+</svg>
+<!-- Battery -->
+<div class="w-5 h-2.5 border border-slate-700 rounded-[3px] p-0.5 flex items-center">
+<div class="h-full w-3.5 bg-slate-800 rounded-sm"></div>
+</div>
+</div>
+</header>
+<!-- END: iOSStatusBar -->
+<!-- BEGIN: NavigationHeader -->
+<nav class="px-5 py-2.5 flex items-center justify-between shrink-0" data-purpose="top-navigation">
+<!-- Back Button -->
+<button aria-label="Go back" class="w-9 h-9 flex items-center justify-center rounded-full active:bg-slate-200 transition-colors text-slate-700" type="button">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4" viewbox="0 0 24 24">
+<path d="M15 18l-6-6 6-6"></path>
+</svg>
+</button>
+<!-- Centered Active Indicator -->
+<div class="flex items-center gap-1.5 px-3 py-1 bg-white rounded-full shadow-sm border border-slate-100">
+<span class="w-2 h-2 rounded-full bg-[#06b6d4] animate-pulse"></span>
+<span class="text-xs font-semibold text-slate-700 tracking-tight">Active Test</span>
+</div>
+<!-- Right Mode Indicator -->
+<span class="text-xs font-medium text-slate-400 tracking-tight">Preparation</span>
+</nav>
+<!-- END: NavigationHeader -->
+<!-- BEGIN: ContentArea -->
+<section class="flex-1 px-5 overflow-y-auto pb-4 pt-1 flex flex-col" data-purpose="test-overview">
+<!-- Heading & Briefing -->
+<div class="text-center mt-1 mb-5">
+<h1 class="text-2xl font-bold text-slate-900 tracking-tight">Trail Making</h1>
+<p class="text-[13px] text-slate-500 mt-1.5 max-w-[280px] mx-auto leading-relaxed">
+          Connect the circles in the correct order as fast as you can.
+        </p>
+</div>
+<!-- Instruction Cards Container -->
+<div class="space-y-4 flex-1 flex flex-col justify-center">
+<!-- BEGIN: Part A Demonstration Card -->
+<article class="bg-[#FFF9ED] border border-[#FBE8C5] rounded-[26px] p-4 text-center transition-transform hover:scale-[1.01]" data-purpose="instruction-part-a">
+<div class="mb-3">
+<h2 class="text-[15px] font-bold text-slate-900">Part A: Numbers Only</h2>
+<p class="text-[11.5px] text-slate-500 mt-0.5">Draw a line from 1 to 2 to 3, and so on.</p>
+</div>
+<!-- Illustrated Vector Nodes Graph: Part A -->
+<div class="bg-white/80 backdrop-blur-xs rounded-2xl p-4 border border-[#f5deba]/50 flex items-center justify-center relative shadow-sm">
+<svg class="w-full max-w-[240px] h-[105px] overflow-visible" fill="none" viewbox="0 0 240 110">
+<!-- Connecting Path Vectors with Arrows/Flow -->
+<!-- 1 to 2 -->
+<line stroke="#9e2a47" stroke-dasharray="3 3" stroke-linecap="round" stroke-width="2" x1="38" x2="192" y1="36" y2="30"></line>
+<!-- 2 to 3 -->
+<line stroke="#9e2a47" stroke-linecap="round" stroke-width="2" x1="192" x2="110" y1="30" y2="82"></line>
+<!-- 3 to 4 -->
+<line stroke="#9e2a47" stroke-linecap="round" stroke-width="2" x1="110" x2="175" y1="82" y2="82"></line>
+<!-- Node 1 -->
+<g class="cursor-pointer">
+<circle cx="38" cy="36" fill="#FFF9ED" r="17" stroke="#9e2a47" stroke-width="2"></circle>
+<text fill="#9e2a47" font-size="15" font-weight="700" text-anchor="middle" x="38" y="42">1</text>
+</g>
+<!-- Node 2 -->
+<g class="cursor-pointer">
+<circle cx="192" cy="30" fill="#FFF9ED" r="17" stroke="#9e2a47" stroke-width="2"></circle>
+<text fill="#9e2a47" font-size="15" font-weight="700" text-anchor="middle" x="192" y="36">2</text>
+</g>
+<!-- Node 3 -->
+<g class="cursor-pointer">
+<circle cx="110" cy="82" fill="#FFF9ED" r="17" stroke="#9e2a47" stroke-width="2"></circle>
+<text fill="#9e2a47" font-size="15" font-weight="700" text-anchor="middle" x="110" y="88">3</text>
+</g>
+<!-- Node 4 -->
+<g class="cursor-pointer">
+<circle cx="175" cy="82" fill="#FFF9ED" r="17" stroke="#9e2a47" stroke-width="2"></circle>
+<text fill="#9e2a47" font-size="15" font-weight="700" text-anchor="middle" x="175" y="88">4</text>
+</g>
+</svg>
+</div>
+</article>
+<!-- END: Part A Demonstration Card -->
+<!-- BEGIN: Part B Demonstration Card -->
+<article class="bg-[#FDF2F4] border border-[#F7D5DC] rounded-[26px] p-4 text-center transition-transform hover:scale-[1.01]" data-purpose="instruction-part-b">
+<div class="mb-3">
+<h2 class="text-[15px] font-bold text-slate-900">Part B: Numbers &amp; Letters</h2>
+<p class="text-[11.5px] text-slate-500 mt-0.5">Alternate between numbers and letters: 1 to A to 2 to B...</p>
+</div>
+<!-- Illustrated Vector Nodes Graph: Part B -->
+<div class="bg-white/80 backdrop-blur-xs rounded-2xl p-4 border border-[#f0c4cd]/50 flex items-center justify-center relative shadow-sm">
+<svg class="w-full max-w-[240px] h-[105px] overflow-visible" fill="none" viewbox="0 0 240 110">
+<!-- Connecting Lines: 1 -> A -> 2 -> B -->
+<!-- 1 to A -->
+<line stroke="#38bdf8" stroke-linecap="round" stroke-width="2.5" x1="55" x2="160" y1="28" y2="28"></line>
+<!-- A to 2 -->
+<line stroke="#38bdf8" stroke-dasharray="3 3" stroke-linecap="round" stroke-width="2.5" x1="160" x2="80" y1="28" y2="82"></line>
+<!-- 2 to B -->
+<line stroke="#38bdf8" stroke-linecap="round" stroke-width="2.5" x1="80" x2="185" y1="82" y2="82"></line>
+<!-- Node 1 -->
+<g class="cursor-pointer">
+<circle cx="55" cy="28" fill="#F0F9FF" r="17" stroke="#0284c7" stroke-width="2"></circle>
+<text fill="#0369a1" font-size="15" font-weight="700" text-anchor="middle" x="55" y="34">1</text>
+</g>
+<!-- Node A -->
+<g class="cursor-pointer">
+<circle cx="160" cy="28" fill="#FDF2F4" r="17" stroke="#9e2a47" stroke-width="2"></circle>
+<text fill="#9e2a47" font-size="15" font-weight="700" text-anchor="middle" x="160" y="34">A</text>
+</g>
+<!-- Node 2 -->
+<g class="cursor-pointer">
+<circle cx="80" cy="82" fill="#F0F9FF" r="17" stroke="#0284c7" stroke-width="2"></circle>
+<text fill="#0369a1" font-size="15" font-weight="700" text-anchor="middle" x="80" y="88">2</text>
+</g>
+<!-- Node B -->
+<g class="cursor-pointer">
+<circle cx="185" cy="82" fill="#FDF2F4" r="17" stroke="#9e2a47" stroke-width="2"></circle>
+<text fill="#9e2a47" font-size="15" font-weight="700" text-anchor="middle" x="185" y="88">B</text>
+</g>
+</svg>
+</div>
+</article>
+<!-- END: Part B Demonstration Card -->
+</div>
+</section>
+<!-- END: ContentArea -->
+<!-- BEGIN: BottomActionSection -->
+<footer class="p-5 pt-2 bg-gradient-to-t from-[#fbfbff] via-[#fbfbff] to-transparent shrink-0" data-purpose="bottom-bar">
+<!-- Practice Start Button -->
+<button class="w-full bg-[#9e2a47] active:bg-[#831e36] text-white font-semibold py-3.5 px-6 rounded-2xl shadow-lg shadow-[#9e2a47]/20 flex items-center justify-center space-x-2 transition-all transform active:scale-[0.98]" type="button">
+<span class="text-[15px] font-medium tracking-wide">Start Practice</span>
+<svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewbox="0 0 24 24">
+<path d="M5 12h14M12 5l7 7-7 7"></path>
+</svg>
+</button>
+<!-- Home Indicator bar -->
+<div class="w-32 h-1 bg-slate-300 rounded-full mx-auto mt-4" data-purpose="home-indicator"></div>
+</footer>
+<!-- END: BottomActionSection -->
+</main>
+<!-- END: MobileContainer -->
+</body></html>

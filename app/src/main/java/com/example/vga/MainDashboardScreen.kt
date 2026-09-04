@@ -10,11 +10,15 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -39,6 +43,8 @@ private val Border = Color(0xFFF1ECE7)
 private val Rose = Color(0xFFFFE5EC)
 private val Blue = Color(0xFFE3F2FD)
 private val BlueText = Color(0xFF1E6091)
+private val Butter = Color(0xFFFFF3CD)
+private val ButterText = Color(0xFF854D0E)
 
 /**
  * VGA's central module-selection screen: the app's first/launch screen.
@@ -49,7 +55,8 @@ private val BlueText = Color(0xFF1E6091)
 @Composable
 fun MainDashboardScreen(
     onSelectAudioProcessing: () -> Unit,
-    onSelectKeyboardProcessing: () -> Unit
+    onSelectKeyboardProcessing: () -> Unit,
+    onSelectCognitiveTests: () -> Unit
 ) {
 
     Box(
@@ -63,11 +70,16 @@ fun MainDashboardScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                // Applied before verticalScroll so content scrolls *below* the
+                // status bar rather than underneath it (the app is edge-to-edge).
+                .statusBarsPadding()
+                .navigationBarsPadding()
+                .verticalScroll(rememberScrollState())
                 .padding(horizontal = 22.dp)
         ) {
 
             Spacer(
-                modifier = Modifier.height(32.dp)
+                modifier = Modifier.height(14.dp)
             )
 
             Text(
@@ -131,6 +143,22 @@ fun MainDashboardScreen(
                 tagBackground = Blue,
                 tagColor = BlueText,
                 onClick = onSelectKeyboardProcessing
+            )
+
+            Spacer(
+                modifier = Modifier.height(16.dp)
+            )
+
+            ModuleCard(
+                icon = "🧠",
+                title = "Cognitive Tests",
+                description = "Attention, memory & processing speed",
+                tag = "Cognition",
+                iconBackground = Butter,
+                iconColor = ButterText,
+                tagBackground = Butter,
+                tagColor = ButterText,
+                onClick = onSelectCognitiveTests
             )
 
             Spacer(
