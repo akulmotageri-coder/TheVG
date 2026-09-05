@@ -25,7 +25,7 @@ VGA combines multiple sources of behavioral and cognitive information:
                     ↓               ↓
               Clean Voice       Transcript
                     ↓               ↓
-             Acoustic/NLP       NLP Analysis
+             Acoustic Analysis  Local AI Analysis
                     │               │
                     └───────┬───────┘
                             ↓
@@ -51,7 +51,7 @@ VGA combines multiple sources of behavioral and cognitive information:
               ┌─────────────┴─────────────┐
               ↓                           ↓
        Charts & Timeline             AI Assistant
-       Deterministic NLP              Local Qwen
+       Deterministic Analysis        Local Qwen
               │                           │
               ↓                           ↓
        Visual Monitoring            Explanation / Q&A
@@ -80,7 +80,7 @@ Acoustic Analysis
       ↓
 Transcript Generation
       ↓
-NLP Analysis
+Local AI Analysis
 ```
 
 ### Speaker Separation
@@ -97,7 +97,7 @@ The system normalizes and resamples audio to:
 
 * Sample rate: 16 kHz
 * Mono audio
-* Mel-spectrogram based processing
+* Mel-spectrogram-based processing
 
 ---
 
@@ -139,15 +139,15 @@ IndicWhisper
 Transcript
 ```
 
-The transcript becomes the input for local linguistic/NLP analysis.
+The transcript becomes the input for local language analysis and feature extraction.
 
 ---
 
-# 4. NLP-Based Linguistic Analysis
+# 4. Local AI-Based Linguistic Analysis
 
-VGA does not use the AI model to generate the underlying cognitive metrics.
+VGA does not use the AI assistant to generate the underlying cognitive metrics.
 
-Instead, measurable linguistic features are calculated locally.
+Instead, measurable linguistic features are calculated locally using deterministic rules, statistical methods, and local AI capabilities where appropriate.
 
 Possible features include:
 
@@ -185,7 +185,7 @@ This can help monitor changes in language usage over time.
 
 ### Vague Word Usage
 
-The system can monitor usage of general/vague words such as:
+The system can monitor usage of general or vague words such as:
 
 * thing
 * stuff
@@ -417,7 +417,7 @@ Example:
 
 Timeline events are generated from actual application data.
 
-The timeline does not rely on the AI model to invent events.
+The timeline does not rely on the AI assistant to invent events.
 
 ---
 
@@ -502,9 +502,9 @@ The application should only send the information required for the requested expl
 
 ---
 
-# 13. Role of AI
+# 13. Role of Local AI
 
-The AI is **not responsible for generating the underlying measurements**.
+The local AI assistant is **not responsible for generating the underlying measurements**.
 
 The architecture is:
 
@@ -513,7 +513,7 @@ Raw Data
    ↓
 Local Feature Extraction
    ↓
-NLP / Statistical Analysis
+Deterministic and Statistical Analysis
    ↓
 Measured Results
    ↓
@@ -524,12 +524,12 @@ Pattern Detection
 Charts + Timeline
 ```
 
-The AI sits above this layer:
+The local AI assistant sits above this layer:
 
 ```text
 Stored Results
       ↓
-Qwen AI Assistant
+Qwen Local AI Assistant
       ↓
 Explanation / Q&A
 ```
@@ -562,7 +562,7 @@ Users can ask:
 
 > What can I do next?
 
-The AI explains the existing measurements instead of creating new measurements.
+The local AI assistant explains the existing measurements instead of creating new measurements.
 
 ---
 
@@ -618,9 +618,9 @@ The long-term goal is to combine multiple independent signals.
                           │
 ┌──────────────┐    ┌─────▼─────┐    ┌─────────────────┐
 │ Transcript   │───►│  Feature  │◄───│ Keyboard Data   │
-│ NLP Features │    │   Store    │    └─────────────────┘
-└──────────────┘    └─────┬─────┘
-                          │
+│ Language     │    │   Store    │    └─────────────────┘
+│ Features     │    └─────┬─────┘
+└──────────────┘          │
                   ┌───────▼────────┐
                   │ Cognitive Tests│
                   └───────┬────────┘
@@ -636,7 +636,7 @@ The long-term goal is to combine multiple independent signals.
               ┌───────────┴───────────┐
               ↓                       ↓
         Visualization            AI Assistant
-        Charts/Timeline          Qwen Local LLM
+        Charts/Timeline          Qwen Local AI
 ```
 
 ---
@@ -650,7 +650,7 @@ Whenever possible:
 * Audio processing runs locally
 * Speaker separation runs locally
 * Transcription runs locally
-* NLP processing runs locally
+* Language analysis runs locally
 * Feature extraction runs locally
 * Baseline calculations run locally
 * Charts run locally
@@ -725,11 +725,11 @@ Identify patterns requiring attention without claiming a medical diagnosis.
 
 ### Reproducible
 
-The same input should produce the same deterministic NLP measurements.
+The same input should produce the same deterministic measurements.
 
 ### AI as an Assistant
 
-Use the LLM to explain results and answer questions rather than replacing the analytical pipeline.
+Use the local AI assistant to explain results and answer questions rather than replacing the analytical pipeline.
 
 ---
 
@@ -746,7 +746,7 @@ Use the LLM to explain results and answer questions rather than replacing the an
         ↓
 5. IndicWhisper generates transcript
         ↓
-6. Local NLP calculates linguistic features
+6. Local language analysis calculates linguistic features
         ↓
 7. Results are stored
         ↓
@@ -822,15 +822,15 @@ The AI Assistant can then explain:
 
 Potential future improvements include:
 
-* More sophisticated linguistic analysis
-* Improved multilingual NLP
+* More sophisticated language analysis
+* Improved multilingual language support
 * Better personal-baseline modeling
 * Longitudinal trend detection
 * Additional cognitive tests
 * More keyboard behavioral features
 * Improved multimodal feature fusion
-* On-device lightweight NLP models
-* Offline AI assistant
+* On-device lightweight language models
+* Offline local AI assistant
 * More detailed visualization
 * Exportable reports
 * Clinician-oriented summaries
@@ -855,6 +855,6 @@ If persistent or concerning changes are observed, users should consider discussi
 
 > **Don't make the AI guess the diagnosis.**
 >
-> **Measure the behavior. Detect the change. Visualize the pattern. Let AI explain it.**
+> **Measure the behavior. Detect the change. Visualize the pattern. Let local AI explain it.**
 
 VGA aims to make cognitive monitoring more continuous, understandable, privacy-conscious, and accessible while keeping the distinction between **technology-assisted monitoring** and **medical diagnosis** clear.
